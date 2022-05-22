@@ -4,5 +4,6 @@ resources:
   - sources
   - Olm
   - LokiGrafana
+  - KeyCloakOperator
   - CertManager
   - Nginx
