@@ -29,6 +29,7 @@ spec:
       enabled: false
     grafana:
       enabled: true
+      envFromSecret: "grafana-env"
       sidecar:
         datasources:
           enabled: true

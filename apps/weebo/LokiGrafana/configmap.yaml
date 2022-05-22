@@ -21,7 +21,6 @@ data:
     [auth.generic_oauth]
     enabled = true
     client_id = Grafana
-    client_secret = HaloceneTest2311!?
     scopes = openid profile email
     name = Weebo
     auth_url = https://auth.weebo.fr/auth/realms/Weebo/protocol/openid-connect/auth
