@@ -4,7 +4,7 @@ metadata:
   name: keycloack
   namespace: keycloak-operator
 spec:
-  channel: alpha
+  channel: candidate
   name: keycloak-operator
   source: operatorhubio-catalog
   sourceNamespace: olm
