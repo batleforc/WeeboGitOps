@@ -18,12 +18,18 @@ spec:
         - name: postgresql-db
           image: postgres:latest
           env:
-            - name: POSTGRES_PASSWORD
-              value: testpassword
             - name: PGDATA
               value: /data/pgdata
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql-secret
+                  key: POSTGRES_PASSWORD
             - name: POSTGRES_DB
-              value: keycloak
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql-secret
+                  key: POSTGRES_DB
 ---
 apiVersion: v1
 kind: Service
