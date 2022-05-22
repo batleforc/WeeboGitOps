@@ -1,0 +1,48 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: loki
+  namespace: loki
+spec:
+  releaseName: loki
+  chart:
+    spec:
+      chart: oki-stack
+      sourceRef:
+        kind: HelmRepository
+        name: grafana
+        namespace: flux-system
+  interval: 24h
+  install:
+    remediation:
+      retries: 3
+  values:
+    loki:
+      enabled: true
+      persistence:
+        enabled: true
+        storageClassName: "local-path"
+        size: 5Gi
+    promtail:
+      enabled: true
+    fluent-bit:
+      enabled: false
+    grafana:
+      enabled: true
+      sidecar:
+        datasources:
+          enabled: true
+      image:
+        tag: 8.2.5
+    prometheus:
+      enabled: true
+      alertmanager:
+        persistentVolume:
+          enabled: false
+      server:
+        persistentVolume:
+          enabled: false
+    filebeat:
+      enabled: false
+    logstash:
+      enabled: false
