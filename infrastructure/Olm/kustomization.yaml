@@ -3,4 +3,3 @@ kind: Kustomization
 resources:
   - crds.yaml
   - olm.yaml
-  - catalogSource.yaml
