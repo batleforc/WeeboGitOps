@@ -4,6 +4,14 @@ metadata:
   name: loki
   namespace: loki
 spec:
+  releaseName: loki
+  chart:
+    spec:
+      chart: oki-stack
+      sourceRef:
+        kind: HelmRepository
+        name: grafana
+        namespace: flux-system
   values:
     loki:
       persistence:
