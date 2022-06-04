@@ -4,6 +4,7 @@ namespace: loki
 metadata:
   name: loki
 resources:
+  - ../../base/LokiGrafana/namespace.yaml
   - configmap.yaml
   - secrets.yaml
   - ingress.yaml
