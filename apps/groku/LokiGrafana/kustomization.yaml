@@ -3,5 +3,5 @@ kind: Kustomization
 namespace: LokiGrafana
 resources:
   - configmap.yaml
-  - secret.yaml
+  - secrets.yaml
   - ingress.yaml
