@@ -19,3 +19,4 @@ spec:
         name: postgresql-secret
         key: POSTGRES_PASSWORD
   hostname: test.keycloak.org # patch par env
+  tlsSecret: INSECURE-DISABLE
