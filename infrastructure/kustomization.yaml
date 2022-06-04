@@ -6,3 +6,4 @@ resources:
   - LokiGrafana
   - CertManager
   - Nginx
+  - KeyCloakOperator
