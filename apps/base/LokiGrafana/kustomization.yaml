@@ -4,5 +4,4 @@ namespace: loki
 metadata:
   name: loki
 resources:
-  - namespace.yaml
   - release.yaml
