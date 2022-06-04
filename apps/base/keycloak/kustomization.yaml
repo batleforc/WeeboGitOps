@@ -8,6 +8,6 @@ resources:
 secretGenerator:
   - name: postgresql-secret
     literals:
-      - "POSTGRES_PASSWORD:<CHANGE_ME>"
-      - "POSTGRES_USER:<CHANGE_ME>"
-      - "POSTGRES_DB:keycloak"
+      - "POSTGRES_PASSWORD=<CHANGE_ME>"
+      - "POSTGRES_USER=<CHANGE_ME>"
+      - "POSTGRES_DB=keycloak"
