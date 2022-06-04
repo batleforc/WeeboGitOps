@@ -6,8 +6,11 @@ metadata:
 resources:
   - ../../base/LokiGrafana/namespace.yaml
   - configmap.yaml
-  - secrets.yaml
   - ingress.yaml
   - ../../base/LokiGrafana/
 patchesStrategicMerge:
   - values.yaml
+secretGenerator:
+  - name: grafana-env
+    literals:
+      - "GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET:<CHANGE_ME>"
