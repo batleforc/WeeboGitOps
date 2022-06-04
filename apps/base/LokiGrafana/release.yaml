@@ -34,7 +34,7 @@ spec:
         datasources:
           enabled: true
       image:
-        tag: 8.2.5
+        tag: 8.5.4
     prometheus:
       enabled: true
       alertmanager:

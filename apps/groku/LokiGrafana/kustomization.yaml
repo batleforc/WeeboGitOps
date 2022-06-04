@@ -7,6 +7,6 @@ resources:
   - configmap.yaml
   - secrets.yaml
   - ingress.yaml
-  - ../../base/LokiGrafana/kustomization.yaml
+  - ../../base/LokiGrafana/
 patchesStrategicMerge:
   - values.yaml
