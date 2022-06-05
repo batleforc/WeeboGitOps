@@ -9,7 +9,7 @@ spec:
     kind: GitRepository
     name: flux-system
   path: ./infrastructure
-  retryInterval: 5m0s
+  retryInterval: 20m0s
   healthChecks:
     - kind: Deployment
       name: keycloak-operator
