@@ -9,4 +9,8 @@ spec:
     kind: GitRepository
     name: flux-system
   path: ./infrastructure
+  healthChecks:
+    - kind: ReplicaSet
+      name: keycloak-operator-*
+      namespace: keycloak-operator
   prune: true
