@@ -14,3 +14,5 @@ secretGenerator:
   - name: grafana-env
     literals:
       - "GF_AUTH_GENERIC_OAUTH_CLIENT_SECRET=<CHANGE_ME>"
+    options:
+      disableNameSuffixHash: true

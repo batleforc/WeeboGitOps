@@ -11,3 +11,5 @@ secretGenerator:
       - "POSTGRES_PASSWORD=<CHANGE_ME>"
       - "POSTGRES_USER=<CHANGE_ME>"
       - "POSTGRES_DB=keycloak"
+    options:
+      disableNameSuffixHash: true
