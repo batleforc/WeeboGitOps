@@ -13,4 +13,4 @@ spec:
   path: ./apps/groku
   prune: true
   wait: true
-  timeout: 10m0s
+  timeout: 20m0s
