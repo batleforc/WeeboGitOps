@@ -7,8 +7,6 @@ spec:
   interval: 10m0s
   dependsOn:
     - name: infrastructure
-    - name: keycloak-operator
-      namespace: keycloak-operator
   sourceRef:
     kind: GitRepository
     name: flux-system
