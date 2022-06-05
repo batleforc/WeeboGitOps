@@ -11,7 +11,7 @@ spec:
   path: ./infrastructure
   retryInterval: 5m0s
   healthChecks:
-    - kind: ReplicaSet
+    - kind: Deployment
       name: keycloak-operator
       namespace: keycloak-operator
   prune: true
