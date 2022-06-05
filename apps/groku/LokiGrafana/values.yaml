@@ -7,11 +7,12 @@ spec:
   releaseName: loki
   chart:
     spec:
-      chart: oki-stack
+      chart: loki-stack
       sourceRef:
         kind: HelmRepository
         name: grafana
         namespace: flux-system
+  interval: 24h
   values:
     loki:
       persistence:
