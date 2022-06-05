@@ -9,6 +9,7 @@ spec:
     kind: GitRepository
     name: flux-system
   path: ./infrastructure
+  retryInterval: 5m0s
   healthChecks:
     - kind: ReplicaSet
       name: keycloak-operator-*
