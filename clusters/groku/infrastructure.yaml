@@ -12,6 +12,6 @@ spec:
   retryInterval: 5m0s
   healthChecks:
     - kind: ReplicaSet
-      name: keycloak-operator-*
+      name: keycloak-operator
       namespace: keycloak-operator
   prune: true
