@@ -6,3 +6,4 @@ resources:
   - crd.yaml
   - release.yaml
   - cert-prod.yaml
+  - selfhosted-pki.yaml
