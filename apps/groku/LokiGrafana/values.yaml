@@ -17,3 +17,6 @@ spec:
     loki:
       persistence:
         storageClassName: "hostpath"
+    prometheus:
+      prometheus-node-exporter:
+        hostRootFsMount: false
