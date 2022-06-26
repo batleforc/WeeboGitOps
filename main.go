@@ -39,12 +39,23 @@ func main() {
 				log.Printf("%s => %s \n", name, err3)
 			}
 		} else {
-			err3 := v.UpdateRealm(client, token.AccessToken)
-			if err3 == nil {
-				log.Printf("%s => Has been succesfuly updated \n", *v.Name)
+			ok, err := v.IsGitopsRealm(client, token.AccessToken)
+			if err == nil {
+				log.Printf("%s => is a gitops realm ? %t \n", *v.Name, ok)
 			} else {
-				log.Printf("%s => %s \n", *v.Name, err3)
+				log.Printf("%s => %s \n", *v.Name, err)
 			}
+			if ok {
+				err3 := v.UpdateRealm(client, token.AccessToken)
+				if err3 == nil {
+					log.Printf("%s => Has been succesfuly updated \n", *v.Name)
+				} else {
+					log.Printf("%s => %s \n", *v.Name, err3)
+				}
+			} else {
+				log.Printf("%s => is not a gitops handled realm \n", *v.Name)
+			}
+
 		}
 
 	}

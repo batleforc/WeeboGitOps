@@ -18,7 +18,29 @@ type KeyCloakRealm struct {
 func (r *KeyCloakRealm) RealmExist(client gocloak.GoCloak, token string) bool {
 	realms, err := r.GetRealm(client, token)
 	return realms != nil && err == nil
+}
 
+// Is Gitops Realm ?
+func (r *KeyCloakRealm) IsGitopsRealm(client gocloak.GoCloak, token string) (bool, error) {
+	if !r.RealmExist(client, token) {
+		return false, fmt.Errorf("realm %s does not exist", *r.Name)
+	}
+	return r.isGitopsRealm(client, token)
+}
+
+// is gitops realm
+func (r *KeyCloakRealm) isGitopsRealm(client gocloak.GoCloak, token string) (bool, error) {
+	realmRep, err := r.GetRealm(client, token)
+	if err != nil {
+		return false, err
+	}
+	if realmRep.Attributes == nil {
+		return false, nil
+	}
+	if val, ok := (*realmRep.Attributes)["GitOpsHandler"]; ok {
+		return val == "true", nil
+	}
+	return false, nil
 }
 
 // get keyCloak Realm
@@ -73,6 +95,7 @@ func (r *KeyCloakRealm) ToRealmRepresentation() gocloak.RealmRepresentation {
 		DisplayNameHTML: r.DisplayNameHTML,
 		DisplayName:     r.DisplayName,
 		Enabled:         r.Enabled,
+		Attributes:      &map[string]string{"GitOpsHandler": "true"},
 	}
 }
 
