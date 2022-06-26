@@ -1,10 +1,11 @@
 weebo:
   name: Weebo
   displayName: Weebo
+  displayNameHTML: Weebo2 auth 2
   enabled: true
 
-Werewolf:
-  name: Werewolf
-  displayName: Werewolf
-  displayNameHTML: Loup Graou
+MasterMK:
+  name: MasterMK
+  displayName: MasterMK
+  displayNameHTML: Master Cluster
   enabled: true
