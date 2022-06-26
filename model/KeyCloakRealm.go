@@ -12,6 +12,7 @@ type KeyCloakRealm struct {
 	DisplayName     *string `json:"displayName,omitempty" yaml:"displayName,omitempty"`
 	DisplayNameHTML *string `json:"displayNameHTML,omitempty" yaml:"displayNameHTML,omitempty"`
 	Enabled         *bool   `json:"enabled,omitempty"`
+	ForceGitops     *bool   `json:"forceGitops,omitempty"`
 }
 
 // does Realm Exist ?
@@ -24,6 +25,9 @@ func (r *KeyCloakRealm) RealmExist(client gocloak.GoCloak, token string) bool {
 func (r *KeyCloakRealm) IsGitopsRealm(client gocloak.GoCloak, token string) (bool, error) {
 	if !r.RealmExist(client, token) {
 		return false, fmt.Errorf("realm %s does not exist", *r.Name)
+	}
+	if r.ForceGitops != nil && *r.ForceGitops {
+		return true, nil
 	}
 	return r.isGitopsRealm(client, token)
 }
