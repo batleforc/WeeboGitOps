@@ -1,0 +1,10 @@
+weebo:
+  name: Weebo
+  displayName: Weebo
+  enabled: true
+
+Werewolf:
+  name: Werewolf
+  displayName: Werewolf
+  displayNameHTML: Loup Graou
+  enabled: true
