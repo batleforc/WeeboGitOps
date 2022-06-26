@@ -102,3 +102,18 @@ func (r *KeyCloakRealm) needUpdate(client gocloak.GoCloak, token string) (bool, 
 
 	return false, nil
 }
+
+// Delete realm if exist
+func (r *KeyCloakRealm) DeleteRealm(client gocloak.GoCloak, token string) error {
+	if !r.RealmExist(client, token) {
+		return fmt.Errorf("realm %s does not exist", *r.Name)
+	}
+	return r.deleteRealm(client, token)
+}
+
+// Delete Realm
+func (r *KeyCloakRealm) deleteRealm(client gocloak.GoCloak, token string) error {
+	ctx := context.Background()
+	err := client.DeleteRealm(ctx, token, *r.Name)
+	return err
+}
