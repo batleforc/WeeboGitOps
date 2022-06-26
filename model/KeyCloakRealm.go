@@ -8,10 +8,10 @@ import (
 )
 
 type KeyCloakRealm struct {
-	Name            string `json:"name"`
-	DisplayName     string `json:"displayName,omitempty" yaml:"displayName,omitempty"`
-	DisplayNameHTML string `json:"displayNameHTML,omitempty" yaml:"displayNameHTML,omitempty"`
-	Enabled         bool   `json:"enabled,omitempty"`
+	Name            *string `json:"name"`
+	DisplayName     *string `json:"displayName,omitempty" yaml:"displayName,omitempty"`
+	DisplayNameHTML *string `json:"displayNameHTML,omitempty" yaml:"displayNameHTML,omitempty"`
+	Enabled         *bool   `json:"enabled,omitempty"`
 }
 
 // does Realm Exist ?
@@ -24,7 +24,7 @@ func (r *KeyCloakRealm) RealmExist(client gocloak.GoCloak, token string) bool {
 // get keyCloak Realm
 func (r *KeyCloakRealm) GetRealm(client gocloak.GoCloak, token string) (*gocloak.RealmRepresentation, error) {
 	ctx := context.Background()
-	realms, err := client.GetRealm(ctx, token, r.Name)
+	realms, err := client.GetRealm(ctx, token, *r.Name)
 	if err != nil {
 		return nil, err
 	}
@@ -34,19 +34,14 @@ func (r *KeyCloakRealm) GetRealm(client gocloak.GoCloak, token string) (*gocloak
 // Create realm if not exist
 func (r *KeyCloakRealm) CreateRealm(client gocloak.GoCloak, token string) (string, bool, error) {
 	if r.RealmExist(client, token) {
-		return r.Name, true, nil
+		return *r.Name, true, nil
 	}
 	return r.createRealm(client, token)
 }
 
 func (r *KeyCloakRealm) createRealm(client gocloak.GoCloak, token string) (string, bool, error) {
 	ctx := context.Background()
-	str, err := client.CreateRealm(ctx, token, gocloak.RealmRepresentation{
-		Realm:           gocloak.StringP(r.Name),
-		DisplayNameHTML: gocloak.StringP(r.DisplayNameHTML),
-		DisplayName:     gocloak.StringP(r.DisplayName),
-		Enabled:         gocloak.BoolP(r.Enabled),
-	})
+	str, err := client.CreateRealm(ctx, token, r.ToRealmRepresentation())
 	if err != nil {
 		fmt.Println("CreateRealm failed:" + err.Error())
 	}
@@ -56,7 +51,7 @@ func (r *KeyCloakRealm) createRealm(client gocloak.GoCloak, token string) (strin
 // Upate realm if exist
 func (r *KeyCloakRealm) UpdateRealm(client gocloak.GoCloak, token string) error {
 	if !r.RealmExist(client, token) {
-		return fmt.Errorf("realm %s does not exist", r.Name)
+		return fmt.Errorf("realm %s does not exist", *r.Name)
 	}
 	return r.updateRealm(client, token)
 }
@@ -64,14 +59,46 @@ func (r *KeyCloakRealm) UpdateRealm(client gocloak.GoCloak, token string) error 
 // Update Realm
 func (r *KeyCloakRealm) updateRealm(client gocloak.GoCloak, token string) error {
 	ctx := context.Background()
-	err := client.UpdateRealm(ctx, token, gocloak.RealmRepresentation{
-		Realm:           gocloak.StringP(r.Name),
-		DisplayNameHTML: gocloak.StringP(r.DisplayNameHTML),
-		DisplayName:     gocloak.StringP(r.DisplayName),
-		Enabled:         gocloak.BoolP(r.Enabled),
-	})
+	err := client.UpdateRealm(ctx, token, r.ToRealmRepresentation())
 	if err != nil {
 		fmt.Println("UpdateRealm failed:" + err.Error())
 	}
 	return err
+}
+
+// to RealmRepresentation
+func (r *KeyCloakRealm) ToRealmRepresentation() gocloak.RealmRepresentation {
+	return gocloak.RealmRepresentation{
+		Realm:           r.Name,
+		DisplayNameHTML: r.DisplayNameHTML,
+		DisplayName:     r.DisplayName,
+		Enabled:         r.Enabled,
+	}
+}
+
+// check if need update
+func (r *KeyCloakRealm) NeedUpdate(client gocloak.GoCloak, token string) (bool, error) {
+	if !r.RealmExist(client, token) {
+		return false, fmt.Errorf("realm %s does not exist", *r.Name)
+	}
+	return r.needUpdate(client, token)
+}
+
+func (r *KeyCloakRealm) needUpdate(client gocloak.GoCloak, token string) (bool, error) {
+	realmRep := r.ToRealmRepresentation()
+	distRealm, err := r.GetRealm(client, token)
+	if err != nil {
+		return false, err
+	}
+	if realmRep.DisplayNameHTML != nil && *realmRep.DisplayNameHTML != *distRealm.DisplayNameHTML {
+		return true, nil
+	}
+	if realmRep.DisplayName != nil && *realmRep.DisplayName != *distRealm.DisplayName {
+		return true, nil
+	}
+	if realmRep.Enabled != nil && *realmRep.Enabled != *distRealm.Enabled {
+		return true, nil
+	}
+
+	return false, nil
 }

@@ -41,9 +41,9 @@ func main() {
 		} else {
 			err3 := v.UpdateRealm(client, token.AccessToken)
 			if err3 == nil {
-				log.Printf("%s => Has been succesfuly updated \n", v.Name)
+				log.Printf("%s => Has been succesfuly updated \n", *v.Name)
 			} else {
-				log.Printf("%s => %s \n", v.Name, err3)
+				log.Printf("%s => %s \n", *v.Name, err3)
 			}
 		}
 
