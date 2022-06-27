@@ -8,11 +8,12 @@ import (
 )
 
 type Realm struct {
-	Name            *string `json:"name"`
-	DisplayName     *string `json:"displayName,omitempty" yaml:"displayName,omitempty"`
-	DisplayNameHTML *string `json:"displayNameHTML,omitempty" yaml:"displayNameHTML,omitempty"`
-	Enabled         *bool   `json:"enabled,omitempty"`
-	ForceGitops     *bool   `json:"forceGitops,omitempty" yaml:"forceGitops,omitempty"`
+	Name            *string   `json:"name"`
+	DisplayName     *string   `json:"displayName,omitempty" yaml:"displayName,omitempty"`
+	DisplayNameHTML *string   `json:"displayNameHTML,omitempty" yaml:"displayNameHTML,omitempty"`
+	Enabled         *bool     `json:"enabled,omitempty"`
+	ForceGitops     *bool     `json:"forceGitops,omitempty" yaml:"forceGitops,omitempty"`
+	Clients         *[]Client `json:"clients,omitempty" yaml:"clients,omitempty"`
 }
 
 // does Realm Exist ?
@@ -143,4 +144,10 @@ func (r *Realm) deleteRealm(client gocloak.GoCloak, token string) error {
 	ctx := context.Background()
 	err := client.DeleteRealm(ctx, token, *r.Name)
 	return err
+}
+
+func (r *Realm) GetAllClients(client gocloak.GoCloak, token string) ([]*gocloak.Client, error) {
+	ctx := context.Background()
+	clients, err := client.GetClients(ctx, token, *r.Name, gocloak.GetClientsParams{})
+	return clients, err
 }

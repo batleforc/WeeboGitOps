@@ -3,6 +3,26 @@ weebo:
   displayName: Weebo
   displayNameHTML: Weebo2 auth 2
   enabled: true
+  clients:
+    - id: Grafana
+      name: grafana
+      description: Tableau de bord Grafana
+      enabled: true
+      standardFlowEnabled: true
+      implicitFlowEnabled: false
+      directAccessGrants: true
+      RootUrl: https://grafana.weebo.fr
+      validRedirectUris:
+        - https://grafana.weebo.fr/*
+      webOrigins:
+        - https://grafana.weebo.fr
+      roles:
+        - name: admin
+          id: admin
+          description: Admin role
+        - name: editor
+          id: editor
+          description: Editor role
 
 MasterMK:
   name: MasterMK

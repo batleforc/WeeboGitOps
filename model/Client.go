@@ -1,6 +1,10 @@
 package model
 
-import "github.com/Nerzal/gocloak/v11"
+import (
+	"context"
+
+	"github.com/Nerzal/gocloak/v11"
+)
 
 type Client struct {
 	Id                        *string   `json:"id" yaml:"id"`
@@ -13,7 +17,6 @@ type Client struct {
 	RootUrl                   *string   `json:"rootUrl,omitempty" yaml:"rootUrl,omitempty"`
 	ValidRedirectUris         *[]string `json:"validRedirectUris,omitempty" yaml:"validRedirectUris,omitempty"`
 	WebOrigins                *[]string `json:"webOrigins,omitempty" yaml:"webOrigins,omitempty"`
-	UseRefreshTokens          *bool     `json:"useRefreshTokens,omitempty" yaml:"useRefreshTokens,omitempty"`
 	DefaultRoles              *[]string `json:"defaultRoles,omitempty" yaml:"defaultRoles,omitempty"`
 }
 
@@ -30,4 +33,9 @@ func (c *Client) ToClientRepresentation() gocloak.Client {
 		RedirectURIs:              c.ValidRedirectUris,
 		WebOrigins:                c.WebOrigins,
 	}
+}
+
+func (c *Client) GetClientsInRealm(client gocloak.GoCloak, token, realm string) (*gocloak.Client, error) {
+	ctx := context.Background()
+	return client.GetClient(ctx, token, realm, *c.Id)
 }

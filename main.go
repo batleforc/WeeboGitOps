@@ -63,6 +63,24 @@ func main() {
 			} else {
 				log.Printf("%s => is not a gitops handled realm \n", *v.Name)
 			}
+			clients, errGetClients := v.GetAllClients(client, token.AccessToken)
+			if errGetClients != nil {
+				log.Printf("%s => %s \n", *v.Name, errGetClients)
+			} else {
+				for _, clien := range clients {
+					log.Printf("%s => %s : %s \n", *v.Name, *clien.ClientID, *clien.ID)
+					if clien.ClientID != nil && *clien.ClientID == "sonarqube" {
+						role, errGetRole := client.GetClientRoles(ctx, token.AccessToken, *v.Name, *clien.ID, gocloak.GetRoleParams{})
+						if errGetRole != nil {
+							log.Printf("%s => %s \n", *v.Name, errGetRole)
+						} else {
+							for _, r := range role {
+								log.Printf("%s => %s \n", *v.Name, *r.Name)
+							}
+						}
+					}
+				}
+			}
 		}
 	}
 	realms, err := client.GetRealms(ctx, token.AccessToken)
