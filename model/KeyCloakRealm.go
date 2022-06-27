@@ -12,7 +12,7 @@ type KeyCloakRealm struct {
 	DisplayName     *string `json:"displayName,omitempty" yaml:"displayName,omitempty"`
 	DisplayNameHTML *string `json:"displayNameHTML,omitempty" yaml:"displayNameHTML,omitempty"`
 	Enabled         *bool   `json:"enabled,omitempty"`
-	ForceGitops     *bool   `json:"forceGitops,omitempty"`
+	ForceGitops     *bool   `json:"forceGitops,omitempty" yaml:"forceGitops,omitempty"`
 }
 
 // does Realm Exist ?

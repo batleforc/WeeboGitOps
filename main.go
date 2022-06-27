@@ -40,24 +40,30 @@ func main() {
 			}
 		} else {
 			ok, err := v.IsGitopsRealm(client, token.AccessToken)
-			if err == nil {
-				log.Printf("%s => is a gitops realm ? %t \n", *v.Name, ok)
-			} else {
+			if err != nil {
 				log.Printf("%s => %s \n", *v.Name, err)
 			}
 			if ok {
-				err3 := v.UpdateRealm(client, token.AccessToken)
-				if err3 == nil {
-					log.Printf("%s => Has been succesfuly updated \n", *v.Name)
+				needUpdate, errNeedUpdate := v.NeedUpdate(client, token.AccessToken)
+				if errNeedUpdate != nil {
+					log.Printf("%s => Error determining if need update : %s \n", *v.Name, errNeedUpdate)
 				} else {
-					log.Printf("%s => %s \n", *v.Name, err3)
+					if needUpdate {
+						err3 := v.UpdateRealm(client, token.AccessToken)
+						if err3 == nil {
+							log.Printf("%s => Has been succesfuly updated \n", *v.Name)
+						} else {
+							log.Printf("%s => %s \n", *v.Name, err3)
+						}
+					} else {
+						log.Printf("%s => No need to update \n", *v.Name)
+					}
 				}
+
 			} else {
 				log.Printf("%s => is not a gitops handled realm \n", *v.Name)
 			}
-
 		}
-
 	}
 	realms, err := client.GetRealms(ctx, token.AccessToken)
 	if err != nil {
