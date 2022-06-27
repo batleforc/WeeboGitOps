@@ -7,7 +7,7 @@ import (
 	"github.com/Nerzal/gocloak/v11"
 )
 
-type KeyCloakRealm struct {
+type Realm struct {
 	Name            *string `json:"name"`
 	DisplayName     *string `json:"displayName,omitempty" yaml:"displayName,omitempty"`
 	DisplayNameHTML *string `json:"displayNameHTML,omitempty" yaml:"displayNameHTML,omitempty"`
@@ -16,13 +16,13 @@ type KeyCloakRealm struct {
 }
 
 // does Realm Exist ?
-func (r *KeyCloakRealm) RealmExist(client gocloak.GoCloak, token string) bool {
+func (r *Realm) RealmExist(client gocloak.GoCloak, token string) bool {
 	realms, err := r.GetRealm(client, token)
 	return realms != nil && err == nil
 }
 
 // Is Gitops Realm ?
-func (r *KeyCloakRealm) IsGitopsRealm(client gocloak.GoCloak, token string) (bool, error) {
+func (r *Realm) IsGitopsRealm(client gocloak.GoCloak, token string) (bool, error) {
 	if !r.RealmExist(client, token) {
 		return false, fmt.Errorf("realm %s does not exist", *r.Name)
 	}
@@ -33,7 +33,7 @@ func (r *KeyCloakRealm) IsGitopsRealm(client gocloak.GoCloak, token string) (boo
 }
 
 // is gitops realm
-func (r *KeyCloakRealm) isGitopsRealm(client gocloak.GoCloak, token string) (bool, error) {
+func (r *Realm) isGitopsRealm(client gocloak.GoCloak, token string) (bool, error) {
 	realmRep, err := r.GetRealm(client, token)
 	if err != nil {
 		return false, err
@@ -48,7 +48,7 @@ func (r *KeyCloakRealm) isGitopsRealm(client gocloak.GoCloak, token string) (boo
 }
 
 // get keyCloak Realm
-func (r *KeyCloakRealm) GetRealm(client gocloak.GoCloak, token string) (*gocloak.RealmRepresentation, error) {
+func (r *Realm) GetRealm(client gocloak.GoCloak, token string) (*gocloak.RealmRepresentation, error) {
 	ctx := context.Background()
 	realms, err := client.GetRealm(ctx, token, *r.Name)
 	if err != nil {
@@ -58,14 +58,14 @@ func (r *KeyCloakRealm) GetRealm(client gocloak.GoCloak, token string) (*gocloak
 }
 
 // Create realm if not exist
-func (r *KeyCloakRealm) CreateRealm(client gocloak.GoCloak, token string) (string, bool, error) {
+func (r *Realm) CreateRealm(client gocloak.GoCloak, token string) (string, bool, error) {
 	if r.RealmExist(client, token) {
 		return *r.Name, true, nil
 	}
 	return r.createRealm(client, token)
 }
 
-func (r *KeyCloakRealm) createRealm(client gocloak.GoCloak, token string) (string, bool, error) {
+func (r *Realm) createRealm(client gocloak.GoCloak, token string) (string, bool, error) {
 	ctx := context.Background()
 	str, err := client.CreateRealm(ctx, token, r.ToRealmRepresentation())
 	if err != nil {
@@ -75,7 +75,7 @@ func (r *KeyCloakRealm) createRealm(client gocloak.GoCloak, token string) (strin
 }
 
 // Upate realm if exist
-func (r *KeyCloakRealm) UpdateRealm(client gocloak.GoCloak, token string) error {
+func (r *Realm) UpdateRealm(client gocloak.GoCloak, token string) error {
 	if !r.RealmExist(client, token) {
 		return fmt.Errorf("realm %s does not exist", *r.Name)
 	}
@@ -83,7 +83,7 @@ func (r *KeyCloakRealm) UpdateRealm(client gocloak.GoCloak, token string) error 
 }
 
 // Update Realm
-func (r *KeyCloakRealm) updateRealm(client gocloak.GoCloak, token string) error {
+func (r *Realm) updateRealm(client gocloak.GoCloak, token string) error {
 	ctx := context.Background()
 	err := client.UpdateRealm(ctx, token, r.ToRealmRepresentation())
 	if err != nil {
@@ -93,7 +93,7 @@ func (r *KeyCloakRealm) updateRealm(client gocloak.GoCloak, token string) error 
 }
 
 // to RealmRepresentation
-func (r *KeyCloakRealm) ToRealmRepresentation() gocloak.RealmRepresentation {
+func (r *Realm) ToRealmRepresentation() gocloak.RealmRepresentation {
 	return gocloak.RealmRepresentation{
 		Realm:           r.Name,
 		DisplayNameHTML: r.DisplayNameHTML,
@@ -104,14 +104,14 @@ func (r *KeyCloakRealm) ToRealmRepresentation() gocloak.RealmRepresentation {
 }
 
 // check if need update
-func (r *KeyCloakRealm) NeedUpdate(client gocloak.GoCloak, token string) (bool, error) {
+func (r *Realm) NeedUpdate(client gocloak.GoCloak, token string) (bool, error) {
 	if !r.RealmExist(client, token) {
 		return false, fmt.Errorf("realm %s does not exist", *r.Name)
 	}
 	return r.needUpdate(client, token)
 }
 
-func (r *KeyCloakRealm) needUpdate(client gocloak.GoCloak, token string) (bool, error) {
+func (r *Realm) needUpdate(client gocloak.GoCloak, token string) (bool, error) {
 	realmRep := r.ToRealmRepresentation()
 	distRealm, err := r.GetRealm(client, token)
 	if err != nil {
@@ -131,7 +131,7 @@ func (r *KeyCloakRealm) needUpdate(client gocloak.GoCloak, token string) (bool, 
 }
 
 // Delete realm if exist
-func (r *KeyCloakRealm) DeleteRealm(client gocloak.GoCloak, token string) error {
+func (r *Realm) DeleteRealm(client gocloak.GoCloak, token string) error {
 	if !r.RealmExist(client, token) {
 		return fmt.Errorf("realm %s does not exist", *r.Name)
 	}
@@ -139,7 +139,7 @@ func (r *KeyCloakRealm) DeleteRealm(client gocloak.GoCloak, token string) error 
 }
 
 // Delete Realm
-func (r *KeyCloakRealm) deleteRealm(client gocloak.GoCloak, token string) error {
+func (r *Realm) deleteRealm(client gocloak.GoCloak, token string) error {
 	ctx := context.Background()
 	err := client.DeleteRealm(ctx, token, *r.Name)
 	return err

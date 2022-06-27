@@ -17,7 +17,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	data := make(map[string]model.KeyCloakRealm)
+	data := make(map[string]model.Realm)
 	err2 := yaml.Unmarshal(yfiles, &data)
 	if err2 != nil {
 		log.Fatal(err2)
