@@ -10,6 +10,8 @@ The project use the github projects and has a board that help to follow the work
 
 Each sub project follow a git folder branch naming convention. When the documentation part is gonna be done, each sub project need to first add basic information into the Readme.md file and the documentation.
 
+Template is considered a part of sub project.
+
 ### KeyCloakOpe
 
 This part of the project has his own git branch folder and logic.
