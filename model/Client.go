@@ -2,12 +2,14 @@ package model
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/Nerzal/gocloak/v11"
 )
 
 type Client struct {
 	Id                        *string   `json:"id" yaml:"id"`
+	ForceGitops               *bool     `json:"forceGitops,omitempty" yaml:"forceGitops,omitempty"`
 	Name                      *string   `json:"name,omitempty" yaml:"name,omitempty"`
 	Description               *string   `json:"description,omitempty" yaml:"description,omitempty"`
 	Enabled                   *bool     `json:"enabled,omitempty" yaml:"enabled,omitempty"`
@@ -32,7 +34,40 @@ func (c *Client) ToClientRepresentation() gocloak.Client {
 		RootURL:                   c.RootUrl,
 		RedirectURIs:              c.ValidRedirectUris,
 		WebOrigins:                c.WebOrigins,
+		Attributes:                &map[string]string{"GitOpsHandler": "true"},
 	}
+}
+
+// ClientExist
+func (c *Client) ClientExist(client gocloak.GoCloak, token, realm string) bool {
+	_, err := c.GetClientsInRealm(client, token, realm)
+	return err == nil
+}
+
+// Client is Gitops
+func (c *Client) IsGitopsClient(client gocloak.GoCloak, token, realm string) (bool, error) {
+	if !c.ClientExist(client, token, realm) {
+		return false, fmt.Errorf("client %s does not exist", *c.Id)
+	}
+	if c.ForceGitops != nil && *c.ForceGitops {
+		return true, nil
+	}
+	return c.isGitopsClient(client, token, realm)
+}
+
+// isGitopsClient
+func (c *Client) isGitopsClient(client gocloak.GoCloak, token, realm string) (bool, error) {
+	clientGo, err := c.GetClientsInRealm(client, token, realm)
+	if err != nil {
+		return false, err
+	}
+	if clientGo.Attributes == nil {
+		return false, nil
+	}
+	if _, ok := (*clientGo.Attributes)["GitOpsHandler"]; ok {
+		return true, nil
+	}
+	return false, nil
 }
 
 func (c *Client) GetClientsInRealm(client gocloak.GoCloak, token, realm string) (*gocloak.Client, error) {

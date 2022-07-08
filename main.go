@@ -22,7 +22,7 @@ func main() {
 	if err2 != nil {
 		log.Fatal(err2)
 	}
-	client := gocloak.NewClient("http://localhost:8080", gocloak.SetAuthAdminRealms("admin/realms"), gocloak.SetAuthRealms("realms"))
+	client := gocloak.NewClient("http://192.168.1.94:8080", gocloak.SetAuthAdminRealms("admin/realms"), gocloak.SetAuthRealms("realms"))
 	restyClient := client.RestyClient()
 	restyClient.SetTLSClientConfig(&tls.Config{InsecureSkipVerify: true})
 	ctx := context.Background()
@@ -63,12 +63,21 @@ func main() {
 			} else {
 				log.Printf("%s => is not a gitops handled realm \n", *v.Name)
 			}
+
+			// Test fetching clients and roles
 			clients, errGetClients := v.GetAllClients(client, token.AccessToken)
 			if errGetClients != nil {
 				log.Printf("%s => %s \n", *v.Name, errGetClients)
 			} else {
 				for _, clien := range clients {
 					log.Printf("%s => %s : %s \n", *v.Name, *clien.ClientID, *clien.ID)
+					if val, ok := (*clien.Attributes)["GitOpsHandler"]; ok {
+						if val == "true" {
+							log.Printf("%s : %s => Is a GitOps client \n", *v.Name, *clien.ClientID)
+						} else {
+							log.Printf("%s : %s => Is not a GitOps client \n", *v.Name, *clien.ClientID)
+						}
+					}
 					if clien.ClientID != nil && *clien.ClientID == "sonarqube" {
 						role, errGetRole := client.GetClientRoles(ctx, token.AccessToken, *v.Name, *clien.ID, gocloak.GetRoleParams{})
 						if errGetRole != nil {
@@ -93,7 +102,7 @@ func main() {
 }
 
 func KeyCloakTest() {
-	client := gocloak.NewClient("http://localhost:8080")
+	client := gocloak.NewClient("http://192.168.1.94:8080")
 	ctx := context.Background()
 	token, err := client.LoginAdmin(ctx, "admin", "admin", "master")
 	if err != nil {
@@ -107,7 +116,7 @@ func KeyCloakTest() {
 }
 
 func KeyCloakGetRealm() {
-	client := gocloak.NewClient("http://localhost:8080", gocloak.SetAuthAdminRealms("admin/realms"), gocloak.SetAuthRealms("realms"))
+	client := gocloak.NewClient("http://192.168.1.94:8080", gocloak.SetAuthAdminRealms("admin/realms"), gocloak.SetAuthRealms("realms"))
 	restyClient := client.RestyClient()
 	restyClient.SetTLSClientConfig(&tls.Config{InsecureSkipVerify: true})
 	ctx := context.Background()
