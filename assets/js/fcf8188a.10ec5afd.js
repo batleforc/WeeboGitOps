@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkweebogitops=self.webpackChunkweebogitops||[]).push([[337],{7171:e=>{e.exports=JSON.parse('{"permalink":"/WeeboGitOps/blog/tags/docusaurus","page":1,"postsPerPage":10,"totalPages":1,"totalCount":1,"blogDescription":"Blog","blogTitle":"Blog"}')}}]);

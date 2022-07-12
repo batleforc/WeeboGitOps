@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkweebogitops=self.webpackChunkweebogitops||[]).push([[746],{5982:e=>{e.exports=JSON.parse('[{"label":"init","permalink":"/WeeboGitOps/blog/tags/init","count":1},{"label":"docusaurus","permalink":"/WeeboGitOps/blog/tags/docusaurus","count":1}]')}}]);

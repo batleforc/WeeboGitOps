@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkweebogitops=self.webpackChunkweebogitops||[]).push([[535],{5641:e=>{e.exports=JSON.parse('{"title":"Recent posts","items":[{"title":"Init Doc","permalink":"/WeeboGitOps/blog/init-doc"}]}')}}]);
