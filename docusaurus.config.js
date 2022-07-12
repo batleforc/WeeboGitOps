@@ -9,11 +9,12 @@ const simplePlantUml = require("@akebifiky/remark-simple-plantuml");
 const config = {
   title: "WeeboGitOps",
   tagline: "WeeboGitOps is a POC to learn GitOps",
-  url: "https://your-docusaurus-test-site.com",
-  baseUrl: "/",
+  url: "https://batleforc.weebo.fr",
+  baseUrl: "/WeeboGitOps/",
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
   favicon: "img/favicon.ico",
+  trailingSlash: false,
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
