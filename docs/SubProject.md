@@ -34,6 +34,7 @@ So, has of now we have our subproject represented with a Git Branch but we need 
 | +-- pre-commit : Pre commit script (gen swagger doc by example)
 | +-- prepare-commit-msg : Prepare commit message script like with GitMoji
 +-- package.json : Package.json with at least husky install
++-- yarn.lcok : Yarn lock file with all the dependencies def (because yarn is better than npm)
 ```
 
 ### Why ?
