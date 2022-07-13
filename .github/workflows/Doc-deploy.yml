@@ -19,6 +19,7 @@ jobs:
         run: yarn build
         env:
           REACT_APP_GITHUB_TOKEN: ${{ secrets.REACT_APP_GITHUB_TOKEN }}
+          REACT_APP_ENV: prod
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:

@@ -1,6 +1,6 @@
 // @ts-check
 // Note: type annotations allow type checking and IDEs autocompletion
-require("dotenv-flow").config();
+if (process.env.REACT_APP_ENV !== "prod") require("dotenv-flow").config();
 const lightCodeTheme = require("prism-react-renderer/themes/github");
 const darkCodeTheme = require("prism-react-renderer/themes/dracula");
 const simplePlantUml = require("@akebifiky/remark-simple-plantuml");
