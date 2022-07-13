@@ -69,6 +69,8 @@ What the CI/CD need to do:
 - On tag make a release if needed
 - Deploy the image/helm chart if needed
 
+If your GithubAction CI/CD need environment variable please create a separated Environments with branch who has access to these variable.
+
 ### Git hooks
 
 What my git hooks need to do:
