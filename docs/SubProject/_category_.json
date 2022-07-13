@@ -1,0 +1,8 @@
+{
+  "label": "Sub project",
+  "position": 4,
+  "link": {
+    "type": "generated-index",
+    "description": "Lets deep dive into the sub project workflow and dependency"
+  }
+}

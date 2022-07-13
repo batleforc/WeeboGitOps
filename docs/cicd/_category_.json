@@ -1,0 +1,8 @@
+{
+  "label": "CI / CD",
+  "position": 5,
+  "link": {
+    "type": "generated-index",
+    "description": "Let's understand how CI / CD is used in this project"
+  }
+}
