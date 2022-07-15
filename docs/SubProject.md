@@ -78,3 +78,13 @@ What my git hooks need to do:
 - Format commit message with GitMoji
 - Build Swagger doc or this kind of doc if needed
 - Check sonarqube ? Gonna go to the CI
+
+### GitIgnore
+
+In order to keep your repo clean, you can use the `.gitignore` file to ignore some files.
+
+If you need some template here is some link by language:
+
+- [NodeJs](https://www.toptal.com/developers/gitignore/api/yarn,node,sonarqube) <- Default One
+- [Go](https://www.toptal.com/developers/gitignore/api/go,yarn,node,sonarqube)
+- [React](https://www.toptal.com/developers/gitignore/api/yarn,node,react,sonarqube)
