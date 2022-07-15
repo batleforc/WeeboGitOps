@@ -13,11 +13,34 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+var (
+	URL      = os.Getenv("URL")
+	USER     = os.Getenv("USER")
+	PASSWORD = os.Getenv("PASSWORD")
+	REALM    = os.Getenv("REALM")
+	FILEPATH = os.Getenv("FILEPATH")
+)
+
 func main() {
-	fmt.Println("URL:", os.Getenv("URL"))
-	fmt.Println("Username:", os.Getenv("USER"))
-	fmt.Println("Password:", os.Getenv("PASSWORD"))
-	yfiles, err := ioutil.ReadFile("def.yml")
+	if URL == "" {
+		URL = "http://localhost:8080"
+	}
+	if USER == "" {
+		USER = "admin"
+	}
+	if PASSWORD == "" {
+		PASSWORD = "admin"
+	}
+	if FILEPATH == "" {
+		FILEPATH = "./def.yaml"
+	}
+	if REALM == "" {
+		REALM = "master"
+	}
+	fmt.Println("URL:", URL)
+	fmt.Println("Username:", USER)
+	fmt.Println("Password:", PASSWORD)
+	yfiles, err := ioutil.ReadFile(FILEPATH)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -26,11 +49,11 @@ func main() {
 	if err2 != nil {
 		log.Fatal(err2)
 	}
-	client := gocloak.NewClient("http://192.168.1.94:8080", gocloak.SetAuthAdminRealms("admin/realms"), gocloak.SetAuthRealms("realms"))
+	client := gocloak.NewClient(URL, gocloak.SetAuthAdminRealms("admin/realms"), gocloak.SetAuthRealms("realms"))
 	restyClient := client.RestyClient()
 	restyClient.SetTLSClientConfig(&tls.Config{InsecureSkipVerify: true})
 	ctx := context.Background()
-	token, err := client.LoginAdmin(ctx, "admin", "admin", "master")
+	token, err := client.LoginAdmin(ctx, USER, PASSWORD, REALM)
 	if err != nil {
 		panic("Login failed:" + err.Error())
 	}
