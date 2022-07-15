@@ -6,12 +6,18 @@
   "author": "Maxime Leriche <maxleriche.60@gmail.com>",
   "license": "MIT",
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "gitmoji-cli": "^5.0.2",
     "husky": "^8.0.1",
     "nodemon": "^2.0.19"
   },
   "scripts": {
     "prepare": "husky install",
-    "watch": "nodemon --exec go run main.go"
+    "watch": "nodemon --exec go run main.go",
+    "build": "go build -o keycloak-weebogitops main.go",
+    "build:win": "go build -o keycloak-weebogitops.exe main.go",
+    "start": "cross-env USER=admin PASSWORD=admin URL=http://192.168.1.94:8080 go run main.go",
+    "start:build": "yarn build && cross-env USER=admin PASSWORD=admin URL=http://192.168.1.94:8080 .\\keycloak-weebogitops",
+    "start:build:win": "yarn build:win && cross-env USER=admin PASSWORD=admin URL=http://192.168.1.94:8080 .\\keycloak-weebogitops.exe"
   }
 }

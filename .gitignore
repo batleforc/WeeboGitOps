@@ -198,3 +198,6 @@ dist
 # .pnp.*
 
 # End of https://www.toptal.com/developers/gitignore/api/go,yarn,node,sonarqube
+
+keycloak-weebogitops
+keycloak-weebogitops.exe

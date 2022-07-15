@@ -7,12 +7,16 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"os"
 
 	"github.com/Nerzal/gocloak/v11"
 	"gopkg.in/yaml.v3"
 )
 
 func main() {
+	fmt.Println("URL:", os.Getenv("URL"))
+	fmt.Println("Username:", os.Getenv("USER"))
+	fmt.Println("Password:", os.Getenv("PASSWORD"))
 	yfiles, err := ioutil.ReadFile("def.yml")
 	if err != nil {
 		log.Fatal(err)
