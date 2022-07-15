@@ -1,0 +1,15 @@
+{
+  "name": "keycloakope",
+  "version": "1.0.0",
+  "main": " ",
+  "repository": "https://github.com/batleforc/WeeboGitOps.git",
+  "author": "Maxime Leriche <maxleriche.60@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "gitmoji-cli": "^5.0.2",
+    "husky": "^8.0.1"
+  },
+  "scripts": {
+    "prepare": "husky install"
+  }
+}
