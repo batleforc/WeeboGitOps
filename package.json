@@ -7,9 +7,11 @@
   "license": "MIT",
   "devDependencies": {
     "gitmoji-cli": "^5.0.2",
-    "husky": "^8.0.1"
+    "husky": "^8.0.1",
+    "nodemon": "^2.0.19"
   },
   "scripts": {
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "watch": "nodemon --exec go run main.go"
   }
 }
