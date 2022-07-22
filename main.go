@@ -1,45 +1,27 @@
 package main
 
 import (
+	"batleforc/keycloakoperator/helper"
 	"batleforc/keycloakoperator/model"
 	"context"
 	"crypto/tls"
 	"fmt"
 	"io/ioutil"
 	"log"
-	"os"
 
 	"github.com/Nerzal/gocloak/v11"
 	"gopkg.in/yaml.v3"
 )
 
 var (
-	URL      = os.Getenv("URL")
-	USER     = os.Getenv("USER")
-	PASSWORD = os.Getenv("PASSWORD")
-	REALM    = os.Getenv("REALM")
-	FILEPATH = os.Getenv("FILEPATH")
+	URL      = helper.GetEnvDefault("URL", "http://localhost:8080")
+	USER     = helper.GetEnvDefault("USER", "admin")
+	PASSWORD = helper.GetEnvDefault("PASSWORD", "admin")
+	REALM    = helper.GetEnvDefault("REALM", "master")
+	FILEPATH = helper.GetEnvDefault("FILEPATH", "./def.yaml")
 )
 
 func main() {
-	if URL == "" {
-		URL = "http://localhost:8080"
-	}
-	if USER == "" {
-		USER = "admin"
-	}
-	if PASSWORD == "" {
-		PASSWORD = "admin"
-	}
-	if FILEPATH == "" {
-		FILEPATH = "./def.yaml"
-	}
-	if REALM == "" {
-		REALM = "master"
-	}
-	fmt.Println("URL:", URL)
-	fmt.Println("Username:", USER)
-	fmt.Println("Password:", PASSWORD)
 	yfiles, err := ioutil.ReadFile(FILEPATH)
 	if err != nil {
 		log.Fatal(err)
@@ -118,38 +100,6 @@ func main() {
 				}
 			}
 		}
-	}
-	realms, err := client.GetRealms(ctx, token.AccessToken)
-	if err != nil {
-		panic("GetRealm failed:" + err.Error())
-	}
-	for _, realm := range realms {
-		fmt.Printf("%s\n", *realm.Realm)
-	}
-}
-
-func KeyCloakTest() {
-	client := gocloak.NewClient("http://192.168.1.94:8080")
-	ctx := context.Background()
-	token, err := client.LoginAdmin(ctx, "admin", "admin", "master")
-	if err != nil {
-		panic("Login failed:" + err.Error())
-	}
-	realm := gocloak.RealmRepresentation{
-		Realm:           gocloak.StringP("test"),
-		DisplayNameHTML: gocloak.StringP("Test Realm"),
-	}
-	client.CreateRealm(ctx, token.AccessToken, realm)
-}
-
-func KeyCloakGetRealm() {
-	client := gocloak.NewClient("http://192.168.1.94:8080", gocloak.SetAuthAdminRealms("admin/realms"), gocloak.SetAuthRealms("realms"))
-	restyClient := client.RestyClient()
-	restyClient.SetTLSClientConfig(&tls.Config{InsecureSkipVerify: true})
-	ctx := context.Background()
-	token, err := client.LoginAdmin(ctx, "admin", "admin", "master")
-	if err != nil {
-		panic("Login failed:" + err.Error())
 	}
 	realms, err := client.GetRealms(ctx, token.AccessToken)
 	if err != nil {
