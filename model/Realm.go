@@ -3,6 +3,7 @@ package model
 import (
 	"context"
 	"fmt"
+	"log"
 
 	"github.com/Nerzal/gocloak/v11"
 )
@@ -13,7 +14,39 @@ type Realm struct {
 	DisplayNameHTML *string   `json:"displayNameHTML,omitempty" yaml:"displayNameHTML,omitempty"`
 	Enabled         *bool     `json:"enabled,omitempty"`
 	ForceGitops     *bool     `json:"forceGitops,omitempty" yaml:"forceGitops,omitempty"`
+	Delete          *bool     `json:"delete,omitempty" yaml:"delete,omitempty"`
 	Clients         *[]Client `json:"clients,omitempty" yaml:"clients,omitempty"`
+}
+
+// Process Realm Gitops
+func (r *Realm) ProcessRealmGitops(client gocloak.GoCloak, token string) error {
+	if !r.RealmExist(client, token) {
+		name, success, errCReate := r.CreateRealm(client, token)
+		if success {
+			log.Printf("%s => Has been succesfuly created or exist \n", name)
+		} else {
+			log.Printf("%s => %s \n", name, errCReate)
+		}
+	} else {
+		isGitOps, err := r.IsGitopsRealm(client, token)
+		if err != nil {
+			return fmt.Errorf("%s => errGitops : %s \n", *r.Name, err)
+		}
+		if isGitOps {
+			needUpdate, errNeedUpdate := r.needUpdate(client, token)
+			if errNeedUpdate != nil {
+				return fmt.Errorf("%s => errNeedUpdate : %s \n", *r.Name, errNeedUpdate)
+			} else if needUpdate {
+				errUpdate := r.updateRealm(client, token)
+				if errUpdate != nil {
+					return fmt.Errorf("%s => errUpdate : %s \n", *r.Name, errUpdate)
+				}
+			}
+		} else {
+			return fmt.Errorf("%s => is not a Gitops handled Realm \n", *r.Name)
+		}
+	}
+	return nil
 }
 
 // does Realm Exist ?
@@ -102,6 +135,17 @@ func (r *Realm) ToRealmRepresentation() gocloak.RealmRepresentation {
 		Enabled:         r.Enabled,
 		Attributes:      &map[string]string{"GitOpsHandler": "true"},
 	}
+}
+
+// check if need force delete
+func (r *Realm) NeedForceDelete(client gocloak.GoCloak, token string) (bool, error) {
+	if !r.RealmExist(client, token) {
+		return false, fmt.Errorf("realm %s does not exist", *r.Name)
+	}
+	if r.Delete != nil && *r.Delete {
+		return true, r.deleteRealm(client, token)
+	}
+	return false, nil
 }
 
 // check if need update
