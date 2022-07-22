@@ -8,6 +8,7 @@ import (
 )
 
 type Client struct {
+	GlobalId                  *string   `json:"globalId,omitempty"`
 	Id                        *string   `json:"id" yaml:"id"`
 	ForceGitops               *bool     `json:"forceGitops,omitempty" yaml:"forceGitops,omitempty"`
 	Name                      *string   `json:"name,omitempty" yaml:"name,omitempty"`
@@ -24,6 +25,7 @@ type Client struct {
 
 func (c *Client) ToClientRepresentation() gocloak.Client {
 	return gocloak.Client{
+		ID:                        c.GlobalId,
 		ClientID:                  c.Id,
 		Name:                      c.Name,
 		Description:               c.Description,
@@ -73,4 +75,32 @@ func (c *Client) isGitopsClient(client gocloak.GoCloak, token, realm string) (bo
 func (c *Client) GetClientsInRealm(client gocloak.GoCloak, token, realm string) (*gocloak.Client, error) {
 	ctx := context.Background()
 	return client.GetClient(ctx, token, realm, *c.Id)
+}
+
+// CreateClient
+func (c *Client) CreateClient(client gocloak.GoCloak, token, realm string) error {
+	if c.ClientExist(client, token, realm) {
+		return fmt.Errorf("client %s already exists in %s", *c.Id, realm)
+	}
+	ctx := context.Background()
+	_, err := client.CreateClient(ctx, token, realm, c.ToClientRepresentation())
+	return err
+}
+
+// DeleteClient
+func (c *Client) DeleteClient(client gocloak.GoCloak, token, realm string) error {
+	if !c.ClientExist(client, token, realm) {
+		return fmt.Errorf("client %s does not exist in %s", *c.Id, realm)
+	}
+	ctx := context.Background()
+	return client.DeleteClient(ctx, token, realm, *c.Id)
+}
+
+// UpdateClient
+func (c *Client) UpdateClient(client gocloak.GoCloak, token, realm string) error {
+	if !c.ClientExist(client, token, realm) {
+		return fmt.Errorf("client %s does not exist in %s", *c.Id, realm)
+	}
+	ctx := context.Background()
+	return client.UpdateClient(ctx, token, realm, c.ToClientRepresentation())
 }
