@@ -20,6 +20,10 @@ type Realm struct {
 
 // Process Realm Gitops
 func (r *Realm) ProcessRealmGitops(client gocloak.GoCloak, token string) error {
+	result, _ := r.NeedForceDelete(client, token)
+	if result {
+		return nil
+	}
 	if !r.RealmExist(client, token) {
 		name, success, errCReate := r.CreateRealm(client, token)
 		if success {
@@ -30,20 +34,20 @@ func (r *Realm) ProcessRealmGitops(client gocloak.GoCloak, token string) error {
 	} else {
 		isGitOps, err := r.IsGitopsRealm(client, token)
 		if err != nil {
-			return fmt.Errorf("%s => errGitops : %s \n", *r.Name, err)
+			return fmt.Errorf("%s => errGitops : %s ", *r.Name, err)
 		}
 		if isGitOps {
 			needUpdate, errNeedUpdate := r.needUpdate(client, token)
 			if errNeedUpdate != nil {
-				return fmt.Errorf("%s => errNeedUpdate : %s \n", *r.Name, errNeedUpdate)
+				return fmt.Errorf("%s => errNeedUpdate : %s", *r.Name, errNeedUpdate)
 			} else if needUpdate {
 				errUpdate := r.updateRealm(client, token)
 				if errUpdate != nil {
-					return fmt.Errorf("%s => errUpdate : %s \n", *r.Name, errUpdate)
+					return fmt.Errorf("%s => errUpdate : %s", *r.Name, errUpdate)
 				}
 			}
 		} else {
-			return fmt.Errorf("%s => is not a Gitops handled Realm \n", *r.Name)
+			return fmt.Errorf("%s => is not a Gitops handled Realm", *r.Name)
 		}
 	}
 	return nil
@@ -139,10 +143,10 @@ func (r *Realm) ToRealmRepresentation() gocloak.RealmRepresentation {
 
 // check if need force delete
 func (r *Realm) NeedForceDelete(client gocloak.GoCloak, token string) (bool, error) {
-	if !r.RealmExist(client, token) {
-		return false, fmt.Errorf("realm %s does not exist", *r.Name)
-	}
 	if r.Delete != nil && *r.Delete {
+		if !r.RealmExist(client, token) {
+			return true, fmt.Errorf("realm %s does not exist", *r.Name)
+		}
 		return true, r.deleteRealm(client, token)
 	}
 	return false, nil

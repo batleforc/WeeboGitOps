@@ -11,6 +11,7 @@ type Client struct {
 	GlobalId                  *string   `json:"globalId,omitempty"`
 	Id                        *string   `json:"id" yaml:"id"`
 	ForceGitops               *bool     `json:"forceGitops,omitempty" yaml:"forceGitops,omitempty"`
+	Delete                    *bool     `json:"delete,omitempty" yaml:"delete,omitempty"`
 	Name                      *string   `json:"name,omitempty" yaml:"name,omitempty"`
 	Description               *string   `json:"description,omitempty" yaml:"description,omitempty"`
 	Enabled                   *bool     `json:"enabled,omitempty" yaml:"enabled,omitempty"`
@@ -103,4 +104,15 @@ func (c *Client) UpdateClient(client gocloak.GoCloak, token, realm string) error
 	}
 	ctx := context.Background()
 	return client.UpdateClient(ctx, token, realm, c.ToClientRepresentation())
+}
+
+// Need Force Delete Client
+func (c *Client) NeedForceDeleteClient(client gocloak.GoCloak, token, realm string) (bool, error) {
+	if c.Delete != nil && *c.Delete {
+		if !c.ClientExist(client, token, realm) {
+			return true, fmt.Errorf("client %s does not exist in %s", *c.Id, realm)
+		}
+		return true, c.DeleteClient(client, token, realm)
+	}
+	return false, nil
 }
