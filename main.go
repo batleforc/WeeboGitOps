@@ -6,7 +6,6 @@ import (
 	"context"
 	"crypto/tls"
 	"fmt"
-	"io/ioutil"
 	"log"
 
 	"github.com/Nerzal/gocloak/v11"
@@ -19,21 +18,19 @@ var (
 	PASSWORD = helper.GetEnvDefault("PASSWORD", "admin")
 	REALM    = helper.GetEnvDefault("REALM", "master")
 	FILEPATH = helper.GetEnvDefault("FILEPATH", "./def.yaml")
+	SKIPTLS  = helper.GetEnvDefault("SKIPTLS", "true")
 )
 
 func main() {
-	yfiles, err := ioutil.ReadFile(FILEPATH)
-	if err != nil {
-		log.Fatal(err)
-	}
+	files := helper.LoadFile(FILEPATH)
 	data := make(map[string]model.Realm)
-	err2 := yaml.Unmarshal(yfiles, &data)
+	err2 := yaml.Unmarshal(files, &data)
 	if err2 != nil {
 		log.Fatal(err2)
 	}
 	client := gocloak.NewClient(URL, gocloak.SetAuthAdminRealms("admin/realms"), gocloak.SetAuthRealms("realms"))
 	restyClient := client.RestyClient()
-	restyClient.SetTLSClientConfig(&tls.Config{InsecureSkipVerify: true})
+	restyClient.SetTLSClientConfig(&tls.Config{InsecureSkipVerify: SKIPTLS == "true"})
 	ctx := context.Background()
 	token, err := client.LoginAdmin(ctx, USER, PASSWORD, REALM)
 	if err != nil {
