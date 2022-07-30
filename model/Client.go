@@ -41,10 +41,15 @@ func (c *Client) ToClientRepresentation() gocloak.Client {
 	}
 }
 
+func (c *Client) ProcessClientGitOps(client gocloak.GoCloak, token, realm string) error {
+	// Add real process of client
+	return nil
+}
+
 // ClientExist
 func (c *Client) ClientExist(client gocloak.GoCloak, token, realm string) bool {
-	_, err := c.GetClientsInRealm(client, token, realm)
-	return err == nil
+	clientInRealm, err := c.GetClientsInRealm(client, token, realm)
+	return err == nil && clientInRealm != nil
 }
 
 // Client is Gitops

@@ -8,12 +8,15 @@ import (
 	"github.com/Nerzal/gocloak/v11"
 )
 
+var ExceptionClient = []string{"account", "account-console", "admin-cli", "broker", "realm-management", "security-admin-console"}
+
 type Realm struct {
 	Name            *string   `json:"name"`
 	DisplayName     *string   `json:"displayName,omitempty" yaml:"displayName,omitempty"`
 	DisplayNameHTML *string   `json:"displayNameHTML,omitempty" yaml:"displayNameHTML,omitempty"`
 	Enabled         *bool     `json:"enabled,omitempty"`
 	ForceGitops     *bool     `json:"forceGitops,omitempty" yaml:"forceGitops,omitempty"`
+	StrictGitops    *bool     `json:"strictGitops,omitempty" yaml:"strictGitops,omitempty"`
 	Delete          *bool     `json:"delete,omitempty" yaml:"delete,omitempty"`
 	Clients         *[]Client `json:"clients,omitempty" yaml:"clients,omitempty"`
 }
@@ -50,7 +53,51 @@ func (r *Realm) ProcessRealmGitops(client gocloak.GoCloak, token string) error {
 			return fmt.Errorf("%s => is not a Gitops handled Realm", *r.Name)
 		}
 	}
+	return r.ProcessClientGitOps(client, token)
+}
+
+func (r *Realm) ProcessClientGitOps(client gocloak.GoCloak, token string) error {
+	if r.Clients == nil {
+		return nil
+	}
+	clients, errGetClients := r.GetAllClients(client, token)
+	if errGetClients != nil {
+		return fmt.Errorf("%s => %s", *r.Name, errGetClients)
+	} else {
+		for _, DistantClient := range clients {
+			fmt.Println(DistantClient.Name)
+			ok, ClientInRealmYaml := r.GetClientInRealmByName(DistantClient)
+			if ok {
+				ClientInRealmYaml.ProcessClientGitOps(client, token, *r.Name)
+			} else if r.IsStrictMode() && !r.IsIgnoreClient(DistantClient) {
+				ctx := context.Background()
+				client.DeleteClient(ctx, token, *r.Name, *DistantClient.ID)
+			}
+		}
+		for _, ClientInRealmYaml := range r.GetMissingClientInDistant(client, token) {
+			ClientInRealmYaml.ProcessClientGitOps(client, token, *r.Name)
+		}
+	}
 	return nil
+}
+
+func (r *Realm) IsIgnoreClient(DistantClient *gocloak.Client) bool {
+	if DistantClient.Name == nil {
+		return false
+	}
+	for _, client := range ExceptionClient {
+		if client == *DistantClient.Name {
+			return true
+		}
+	}
+	return false
+}
+
+func (r *Realm) IsStrictMode() bool {
+	if r.StrictGitops == nil {
+		return false
+	}
+	return *r.StrictGitops
 }
 
 // does Realm Exist ?
@@ -198,4 +245,30 @@ func (r *Realm) GetAllClients(client gocloak.GoCloak, token string) ([]*gocloak.
 	ctx := context.Background()
 	clients, err := client.GetClients(ctx, token, *r.Name, gocloak.GetClientsParams{})
 	return clients, err
+}
+
+// GetClientInRealmByName get client in realm
+func (r *Realm) GetClientInRealmByName(target *gocloak.Client) (bool, *Client) {
+	for _, client := range *r.Clients {
+		if client.Name == nil {
+			continue
+		}
+		if *client.Name == *target.Name {
+			return true, &client
+		}
+	}
+	return false, nil
+}
+
+func (r *Realm) GetMissingClientInDistant(goClient gocloak.GoCloak, token string) []*Client {
+	var missing []*Client
+	for _, client := range *r.Clients {
+		if client.Name == nil {
+			continue
+		}
+		if !client.ClientExist(goClient, token, *r.Name) {
+			missing = append(missing, &client)
+		}
+	}
+	return missing
 }
