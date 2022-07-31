@@ -3,6 +3,7 @@ package model
 import (
 	"context"
 	"fmt"
+	"log"
 
 	"github.com/Nerzal/gocloak/v11"
 )
@@ -19,6 +20,7 @@ type Client struct {
 	ImplicitFlowEnabled       *bool     `json:"implicitFlowEnabled,omitempty" yaml:"implicitFlowEnabled,omitempty"`
 	DirectAccessGrantsEnabled *bool     `json:"directAccessGrants,omitempty" yaml:"directAccessGrants,omitempty"`
 	RootUrl                   *string   `json:"rootUrl,omitempty" yaml:"rootUrl,omitempty"`
+	BaseURL                   *string   `json:"baseUrl,omitempty" yaml:"baseUrl,omitempty"`
 	ValidRedirectUris         *[]string `json:"validRedirectUris,omitempty" yaml:"validRedirectUris,omitempty"`
 	WebOrigins                *[]string `json:"webOrigins,omitempty" yaml:"webOrigins,omitempty"`
 	DefaultRoles              *[]string `json:"defaultRoles,omitempty" yaml:"defaultRoles,omitempty"`
@@ -37,18 +39,30 @@ func (c *Client) ToClientRepresentation() gocloak.Client {
 		RootURL:                   c.RootUrl,
 		RedirectURIs:              c.ValidRedirectUris,
 		WebOrigins:                c.WebOrigins,
+		BaseURL:                   c.BaseURL,
 		Attributes:                &map[string]string{"GitOpsHandler": "true"},
 	}
 }
 
 func (c *Client) ProcessClientGitOps(client gocloak.GoCloak, token, realm string) error {
 	// Add real process of client
+	if !c.ClientExist(client, token, realm) && (c.Delete == nil || !*c.Delete) {
+		c.CreateClient(client, token, realm)
+	} else if needDelete, errDelete := c.NeedForceDeleteClient(client, token, realm); needDelete {
+		return errDelete
+	} else {
+		c.UpdateClient(client, token, realm)
+	}
+	// Process client roles and Mapper
 	return nil
 }
 
 // ClientExist
 func (c *Client) ClientExist(client gocloak.GoCloak, token, realm string) bool {
 	clientInRealm, err := c.GetClientsInRealm(client, token, realm)
+	if err != nil {
+		log.Println(err)
+	}
 	return err == nil && clientInRealm != nil
 }
 
@@ -80,7 +94,16 @@ func (c *Client) isGitopsClient(client gocloak.GoCloak, token, realm string) (bo
 
 func (c *Client) GetClientsInRealm(client gocloak.GoCloak, token, realm string) (*gocloak.Client, error) {
 	ctx := context.Background()
-	return client.GetClient(ctx, token, realm, *c.Id)
+	clients, err := client.GetClients(ctx, token, realm, gocloak.GetClientsParams{})
+	if err != nil {
+		return nil, err
+	}
+	for _, distantClient := range clients {
+		if *distantClient.ClientID == *c.Id {
+			return distantClient, nil
+		}
+	}
+	return nil, fmt.Errorf("client %s does not exist in %s", *c.Id, realm)
 }
 
 // CreateClient
@@ -108,7 +131,10 @@ func (c *Client) UpdateClient(client gocloak.GoCloak, token, realm string) error
 		return fmt.Errorf("client %s does not exist in %s", *c.Id, realm)
 	}
 	ctx := context.Background()
-	return client.UpdateClient(ctx, token, realm, c.ToClientRepresentation())
+	clientToUpdate := c.ToClientRepresentation()
+	clientInRealm, _ := c.GetClientsInRealm(client, token, realm)
+	clientToUpdate.ID = clientInRealm.ID
+	return client.UpdateClient(ctx, token, realm, clientToUpdate)
 }
 
 // Need Force Delete Client

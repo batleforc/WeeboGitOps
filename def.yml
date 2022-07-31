@@ -6,12 +6,12 @@ weebo:
   clients:
     - id: Grafana
       name: grafana
-      description: Tableau de bord Grafana
+      description: Tableau de bord Grafana2
       enabled: true
       standardFlowEnabled: true
       implicitFlowEnabled: false
       directAccessGrants: true
-      RootUrl: https://grafana.weebo.fr
+      baseUrl: https://grafana.weebo.fr
       validRedirectUris:
         - https://grafana.weebo.fr/*
       webOrigins:

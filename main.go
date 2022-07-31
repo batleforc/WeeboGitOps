@@ -17,7 +17,7 @@ var (
 	USER     = helper.GetEnvDefault("USER", "admin")
 	PASSWORD = helper.GetEnvDefault("PASSWORD", "admin")
 	REALM    = helper.GetEnvDefault("REALM", "master")
-	FILEPATH = helper.GetEnvDefault("FILEPATH", "./def.yaml")
+	FILEPATH = helper.GetEnvDefault("FILEPATH", "./def.yml")
 	SKIPTLS  = helper.GetEnvDefault("SKIPTLS", "true")
 )
 
@@ -41,31 +41,6 @@ func main() {
 		if errProcessRealm != nil {
 			log.Print(errProcessRealm)
 			continue
-		}
-		clients, errGetClients := v.GetAllClients(client, token.AccessToken)
-		if errGetClients != nil {
-			log.Printf("%s => %s \n", *v.Name, errGetClients)
-		} else {
-			for _, clien := range clients {
-				log.Printf("%s => %s : %s \n", *v.Name, *clien.ClientID, *clien.ID)
-				if val, ok := (*clien.Attributes)["GitOpsHandler"]; ok {
-					if val == "true" {
-						log.Printf("%s : %s => Is a GitOps client \n", *v.Name, *clien.ClientID)
-					} else {
-						log.Printf("%s : %s => Is not a GitOps client \n", *v.Name, *clien.ClientID)
-					}
-				}
-				if clien.ClientID != nil && *clien.ClientID == "sonarqube" {
-					role, errGetRole := client.GetClientRoles(ctx, token.AccessToken, *v.Name, *clien.ID, gocloak.GetRoleParams{})
-					if errGetRole != nil {
-						log.Printf("%s => %s \n", *v.Name, errGetRole)
-					} else {
-						for _, r := range role {
-							log.Printf("%s => %s \n", *v.Name, *r.Name)
-						}
-					}
-				}
-			}
 		}
 	}
 	realms, err := client.GetRealms(ctx, token.AccessToken)

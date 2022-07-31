@@ -65,7 +65,6 @@ func (r *Realm) ProcessClientGitOps(client gocloak.GoCloak, token string) error 
 		return fmt.Errorf("%s => %s", *r.Name, errGetClients)
 	} else {
 		for _, DistantClient := range clients {
-			fmt.Println(DistantClient.Name)
 			ok, ClientInRealmYaml := r.GetClientInRealmByName(DistantClient)
 			if ok {
 				ClientInRealmYaml.ProcessClientGitOps(client, token, *r.Name)
