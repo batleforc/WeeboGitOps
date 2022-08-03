@@ -24,6 +24,7 @@ type Client struct {
 	ValidRedirectUris         *[]string `json:"validRedirectUris,omitempty" yaml:"validRedirectUris,omitempty"`
 	WebOrigins                *[]string `json:"webOrigins,omitempty" yaml:"webOrigins,omitempty"`
 	DefaultRoles              *[]string `json:"defaultRoles,omitempty" yaml:"defaultRoles,omitempty"`
+	Roles                     *[]Role   `json:"roles,omitempty" yaml:"roles,omitempty"`
 }
 
 func (c *Client) ToClientRepresentation() gocloak.Client {
@@ -47,22 +48,78 @@ func (c *Client) ToClientRepresentation() gocloak.Client {
 func (c *Client) ProcessClientGitOps(client gocloak.GoCloak, token, realm string) error {
 	// Add real process of client
 	if !c.ClientExist(client, token, realm) && (c.Delete == nil || !*c.Delete) {
-		c.CreateClient(client, token, realm)
+		err := c.CreateClient(client, token, realm)
+		if err != nil {
+			log.Println(err)
+		}
 	} else if needDelete, errDelete := c.NeedForceDeleteClient(client, token, realm); needDelete {
 		return errDelete
 	} else {
-		c.UpdateClient(client, token, realm)
+		err := c.UpdateClient(client, token, realm)
+		if err != nil {
+			log.Println(err)
+		}
+	}
+	if c.Roles != nil {
+		for _, role := range *c.Roles {
+			err := role.ProcessRoleGitOps(client, token, realm, c)
+			if err != nil {
+				log.Println("root", err)
+			}
+		}
 	}
 	// Process client roles and Mapper
 	return nil
 }
 
+func (c *Client) GetDistantClientID(client gocloak.GoCloak, token, realm string) (string, error) {
+	if !c.ClientExist(client, token, realm) {
+		return "", fmt.Errorf("client %s does not exist", *c.Id)
+	}
+	return c.getDistantClientID(client, token, realm)
+}
+
+func (c *Client) getDistantClientID(client gocloak.GoCloak, token, realm string) (string, error) {
+	distantClient, err := c.GetClientsInRealm(client, token, realm)
+	if err != nil {
+		return "", err
+	}
+	return *distantClient.ID, nil
+}
+
+func (c *Client) GetAllRoles(client gocloak.GoCloak, clientDistantId, token, realm string) ([]*gocloak.Role, error) {
+	return client.GetClientRoles(context.Background(), token, realm, clientDistantId, gocloak.GetRoleParams{})
+}
+
+func (c *Client) GetRolesYMLByName(name string) (bool, Role) {
+	for _, role := range *c.Roles {
+		if *role.Name == name {
+			return true, role
+		}
+	}
+	return false, Role{}
+}
+
+func (c *Client) GetDistantRoleByName(client gocloak.GoCloak, token, realm string, name string) (*gocloak.Role, error) {
+	clientDistantId, errGetClientDistantID := c.GetDistantClientID(client, token, realm)
+	if errGetClientDistantID != nil {
+		return nil, errGetClientDistantID
+	}
+	roles, err := c.GetAllRoles(client, clientDistantId, token, realm)
+	if err != nil {
+		return nil, err
+	}
+	for _, role := range roles {
+		if *role.Name == name {
+			return role, nil
+		}
+	}
+	return nil, fmt.Errorf("Role %s not found", name)
+}
+
 // ClientExist
 func (c *Client) ClientExist(client gocloak.GoCloak, token, realm string) bool {
 	clientInRealm, err := c.GetClientsInRealm(client, token, realm)
-	if err != nil {
-		log.Println(err)
-	}
 	return err == nil && clientInRealm != nil
 }
 

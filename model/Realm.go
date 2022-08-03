@@ -74,6 +74,7 @@ func (r *Realm) ProcessClientGitOps(client gocloak.GoCloak, token string) error 
 			}
 		}
 		for _, ClientInRealmYaml := range r.GetMissingClientInDistant(client, token) {
+			fmt.Printf("Processing2 %s\n", *ClientInRealmYaml.Name)
 			ClientInRealmYaml.ProcessClientGitOps(client, token, *r.Name)
 		}
 	}
@@ -259,14 +260,14 @@ func (r *Realm) GetClientInRealmByName(target *gocloak.Client) (bool, *Client) {
 	return false, nil
 }
 
-func (r *Realm) GetMissingClientInDistant(goClient gocloak.GoCloak, token string) []*Client {
-	var missing []*Client
+func (r *Realm) GetMissingClientInDistant(goClient gocloak.GoCloak, token string) []Client {
+	var missing []Client
 	for _, client := range *r.Clients {
 		if client.Name == nil {
 			continue
 		}
 		if !client.ClientExist(goClient, token, *r.Name) {
-			missing = append(missing, &client)
+			missing = append(missing, client)
 		}
 	}
 	return missing

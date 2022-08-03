@@ -1,0 +1,23 @@
+version: '3'
+
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:19.0
+    container_name: keycloak
+    command: start-dev
+    networks:
+      - werewolf
+    ports:
+      - "8080:8080"
+    environment:
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: admin
+      KEYCLOAK_REALM: master
+      KEYCLOAK_BASE_URL: http://keycloak:8080/auth
+      KEYCLOAK_CLIENT_ID: admin-cli
+      KEYCLOAK_CLIENT_SECRET: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KEYCLOAK_ADMIN: admin
+networks:
+  werewolf:
+    name: werewolf

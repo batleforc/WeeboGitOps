@@ -23,6 +23,14 @@ weebo:
         - name: editor
           id: editor
           description: Editor role
+    - id: Sonarqube
+      name: sonarqube
+      description: Uttilitaire clean code Sonarqube
+      baseUrl: https://qube.weebo.fr
+      validRedirectUris:
+        - https://qube.weebo.fr/*
+      webOrigins:
+        - https://qube.weebo.fr
 
 MasterMK:
   name: MasterMK
