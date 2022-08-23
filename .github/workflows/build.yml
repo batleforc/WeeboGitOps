@@ -21,13 +21,18 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - run: echo "${{ github.sha }}-${{ github.head_ref }}"
+      - name: Declare some variables
+        id: vars
+        shell: bash
+        run: |
+          echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+          echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
       - name: Build image and push to Docker Hub and GitHub Container Registry
         uses: docker/build-push-action@v2
         with:
           # Note: tags has to be all lower-case
           tags: |
-            ghcr.io/batleforc/keycloakope:${{ github.sha }}
-            ghcr.io/batleforc/keycloakope:${{ github.head_ref }}
+            ghcr.io/batleforc/keycloakope:${{ steps.vars.outputs.sha_short }}
+            ghcr.io/batleforc/keycloakope:${{ steps.vars.outputs.branch }}
           # build on feature branches, push only on main branch
           push: true
