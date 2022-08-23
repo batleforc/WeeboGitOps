@@ -5,7 +5,7 @@ on:
     branches:
       - "KeyCloakOpe/Main"
       - "KeyCloakOpe/dev"
-      - "KeyCloakOpe/init"
+      - "KeyCloakOpe/Init"
 
 jobs:
   build:
