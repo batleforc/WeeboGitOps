@@ -11,6 +11,11 @@ weebo:
       standardFlowEnabled: true
       implicitFlowEnabled: false
       directAccessGrants: true
+      secretTo:
+        - namespace: LokiGrafana
+          secretName: grafana-oidc-name
+          clientId: grafana
+          clientSecret: grafana-oidc-secret
       baseUrl: https://grafana.weebo.fr
       validRedirectUris:
         - https://grafana.weebo.fr/*
