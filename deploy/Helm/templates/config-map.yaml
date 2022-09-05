@@ -1,0 +1,11 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "keycloakope-map"
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: "keycloakope-map"
+data:
+  keycloakope-map.yaml: |-
+    {{ .Values.definition | indent 4 }}

@@ -1,0 +1,29 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: "keycloakope-deploy"
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: "keycloakope-deploy"
+spec:
+  template:
+    metadata:
+      labels:
+        app: "keycloakope-deploy"
+    spec:
+      containers:
+        - name: "keycloakope-deploy"
+          restartPolicy: Never
+          image: {{ printf "%s:%s" .Values.image.repo .Values.image.tag }}
+          imagePullPolicy: Always
+          envFrom:
+            - secretRef:
+                name: "keycloakope-secret"
+          volumeMounts:
+            - name: "keycloakope-deploy"
+              mountPath: "/"
+      volumes:
+        - name: "keycloakope-deploy"
+          configMap:
+            name: "keycloakope-deploy"

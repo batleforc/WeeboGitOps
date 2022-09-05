@@ -1,0 +1,56 @@
+image:
+  repo: ghcr.io/batleforc/keycloakope
+  tag: Init
+namespace: KeyCloakOpe
+definition: |
+  weebo:
+    name: Weebo
+    displayName: Weebo
+    displayNameHTML: Weebo2 auth 2
+    enabled: true
+    clients:
+      - id: Grafana
+        name: grafana
+        description: Tableau de bord Grafana2
+        enabled: true
+        standardFlowEnabled: true
+        implicitFlowEnabled: false
+        directAccessGrants: true
+        secretTo:
+          - namespace: LokiGrafana
+            secretName: grafana-oidc-name
+            clientId: grafana
+            clientSecret: grafana-oidc-secret
+        baseUrl: https://grafana.weebo.fr
+        validRedirectUris:
+          - https://grafana.weebo.fr/*
+        webOrigins:
+          - https://grafana.weebo.fr
+        roles:
+          - name: admin
+            id: admin
+            description: Admin role
+          - name: editor
+            id: editor
+            description: Editor role
+      - id: Sonarqube
+        name: sonarqube
+        description: Uttilitaire clean code Sonarqube
+        baseUrl: https://qube.weebo.fr
+        validRedirectUris:
+          - https://qube.weebo.fr/*
+        webOrigins:
+          - https://qube.weebo.fr
+
+  MasterMK:
+    name: MasterMK
+    displayName: MasterMK
+    displayNameHTML: Master Cluster
+    enabled: true
+
+keycloak:
+  url: https://auth.weebo.fr
+  user: admin
+  password: admin
+  realm: master
+  skiptls: true

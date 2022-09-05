@@ -1,5 +1,6 @@
 FROM golang:1.17-alpine as build
 WORKDIR /usr/local/go/src/batleforc/keycloakoperator
+LABEL org.opencontainers.image.source = "https://github.com/batleforc/WeeboGitOps"
 
 COPY go.mod ./
 COPY go.sum ./
