@@ -21,9 +21,9 @@ spec:
             - secretRef:
                 name: "keycloakope-secret"
           volumeMounts:
-            - name: "keycloakope-deploy"
-              mountPath: "/"
+            - name: "keycloakope-map"
+              mountPath: "/app"
       volumes:
-        - name: "keycloakope-deploy"
+        - name: "keycloakope-map"
           configMap:
-            name: "keycloakope-deploy"
+            name: "keycloakope-map"

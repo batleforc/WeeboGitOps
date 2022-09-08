@@ -48,7 +48,7 @@ definition:
     enabled: true
 
 keycloak:
-  url: http://keycloak.keycloack.svc.cluster.local:8080
+  url: http://keycloak.keycloack.svc.cluster.local:32362
   user: admin
   password: admin
   realm: master
