@@ -1,8 +1,8 @@
 image:
   repo: ghcr.io/batleforc/keycloakope
   tag: Init
-namespace: KeyCloakOpe
-definition: |
+namespace: keycloakope
+definition:
   weebo:
     name: Weebo
     displayName: Weebo
@@ -41,7 +41,6 @@ definition: |
           - https://qube.weebo.fr/*
         webOrigins:
           - https://qube.weebo.fr
-
   MasterMK:
     name: MasterMK
     displayName: MasterMK
@@ -49,8 +48,8 @@ definition: |
     enabled: true
 
 keycloak:
-  url: https://auth.weebo.fr
+  url: http://keycloak.keycloack.svc.cluster.local:8080
   user: admin
   password: admin
   realm: master
-  skiptls: true
+  skiptls: "true"

@@ -7,5 +7,6 @@ metadata:
   labels:
     app: "keycloakope-map"
 data:
-  keycloakope-map.yaml: |-
-    {{ .Values.definition | indent 4 }}
+  keycloakope-map.yaml: |
+    {{"---" | indent 4}}
+    {{ toYaml .Values.definition | indent 4 }}

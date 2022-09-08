@@ -12,9 +12,9 @@ spec:
       labels:
         app: "keycloakope-deploy"
     spec:
+      restartPolicy: Never
       containers:
         - name: "keycloakope-deploy"
-          restartPolicy: Never
           image: {{ printf "%s:%s" .Values.image.repo .Values.image.tag }}
           imagePullPolicy: Always
           envFrom:
