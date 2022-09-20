@@ -1,0 +1,24 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: dashy
+  namespace: dashboard
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - board.weebo.fr
+      secretName: board-weebo-tls
+  rules:
+    - host: board.weebo.fr
+      http:
+        paths:
+          - pathType: ImplementationSpecific
+            backend:
+              service:
+                name: quake
+                port:
+                  number: 80

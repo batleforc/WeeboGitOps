@@ -1,0 +1,43 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dashy
+  namespace: dashboard
+  labels:
+    app: dashy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dashy
+  template:
+    metadata:
+      labels:
+        app: dashy
+    spec:
+      containers:
+        - name: dashy
+          image: lissy93/dashy
+          env:
+            - name: NODE_ENV
+              value: "production"
+          ports:
+            - name: http
+              containerPort: 80
+          livenessProbe:
+            exec:
+              command:
+                - "NODE"
+                - "/app/services/healthcheck"
+            initialDelaySeconds: 40
+            periodSeconds: 300 # Test toute les 5 minutes
+            timeoutSeconds: 10
+            failureThreshold: 3
+          volumeMounts:
+            - name: dashy-config
+              mountPath: /app/config/conf.yml
+      volumes:
+        - name: dashy-config
+          configMap:
+            name: dashy

@@ -5,3 +5,4 @@ resources:
   - Tekton
   - Monitoring
   - Sonarqube
+  - Dashy

@@ -1,0 +1,72 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dashy
+  namespace: dashboard
+data:
+  conf.yml: |
+    pageInfo:
+      title: Weebo Dashboard
+    appConfig:
+      enableMultiTasking: true
+      cssThemes:
+        - Dracula
+    sections: # An array of sections
+      - name: Infra
+        icon: far fa-rocket
+        items:
+          - title: Harbor
+            description: Registre d'image docker
+            icon: si-harbor
+            statusCheck: true
+            url: https://harbor.weebo.fr
+          - title: KeyCloak Console
+            description: Console du fournisseur d'identité
+            icon: https://upload.wikimedia.org/wikipedia/commons/2/29/Keycloak_Logo.png
+            statusCheck: true
+            url: https://auth.weebo.fr/console
+          - title: Grafana
+            description: Tableau de board de monitoring
+            icon: si-grafana
+            statusCheck: true
+            url: https://grafana.weebo.fr
+      - name: Dev
+        icon: si-visualstudiocode
+        items:
+          - title: Sonarqube
+            icon: si-sonarqube
+            statusCheck: true
+            description: Tableau de board pour la qualité de code
+            url: https://qube.weebo.fr
+          - title: Tekton
+            description: Systéme de CI/CD
+            statusCheck: true
+            icon: si-tekton
+            url: https://cicd.weebo.fr
+          - title: Gitea
+            description: Serveur Git
+            statusCheck: true
+            icon: si-gitea
+            url: https://git.weebo.fr
+      - name: Doc
+        items:
+          - title: Usage
+            icon: si-readthedocs
+            statusCheck: true
+            description: Documentation autour de l'uttilisation de l'infrastructure
+            url: https://usage.doc.weebo.fr
+          - title: Technique
+            icon: si-readthedocs
+            statusCheck: true
+            description: Documentation de l'aspect technique
+            url: https://tech.doc.weebo.fr
+          - title: Docker compose all
+            icon: si-github
+            statusCheck: true
+            description: Documentation de l'env 100% docker
+            url: https://github.com/batleforc/docompose-all
+      - name: JOKE
+        widgets:
+          - type: joke
+            options:
+              category: programming
