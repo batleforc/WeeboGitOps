@@ -1,0 +1,10 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - namespace.yaml
+  - configmap.yaml
+  - deploy.db.yaml
+  - service.db.yaml
+  - deploy.main.yaml
+  - service.main.yaml
+  - ingress.yaml

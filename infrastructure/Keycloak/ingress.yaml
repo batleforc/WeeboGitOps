@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: keycloak
+  namespace: keycloack
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    ingress.kubernetes.io/proxy-body-size: "128k"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - auth.weebo.fr
+      secretName: auth-weebo-tls
+  rules:
+    - host: auth.weebo.fr
+      http:
+        paths:
+          - path: /
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: keycloak
+                port:
+                  number: 8080

@@ -1,0 +1,55 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres-keycloack
+  namespace: keycloack
+spec:
+  serviceName: "postgres-keycloack"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-keycloack
+  template:
+    metadata:
+      labels:
+        app: postgres-keycloack
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:13
+          volumeMounts:
+            - name: postgres-keycloack-data
+              mountPath: /var/lib/postgresql/data
+              subPath: pgdata
+            - name: db-init
+              readOnly: true
+              mountPath: /docker-entrypoint-initdb.d/
+          env:
+            - name: POSTGRES_USER
+              value: keyClock
+            - name: POSTGRES_PASSWORD
+              value: zXChsnTz2JYo6Wq2p6To1bHnU0M884Hz
+            - name: POSTGRES_DB
+              value: keycloak
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
+          ports:
+            - containerPort: 5432
+      terminationGracePeriodSeconds: 60
+      volumes:
+        - name: db-init
+          configMap:
+            name: db-init
+            items:
+              - key: init-user-db.sh
+                path: init-user-db.sh
+  volumeClaimTemplates:
+    - metadata:
+        name: postgres-keycloack-data
+      spec:
+        accessModes:
+          - "ReadWriteOnce"
+        resources:
+          requests:
+            storage: 10Gi
