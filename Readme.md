@@ -12,6 +12,8 @@ Each sub project follow a git folder branch naming convention. When the document
 
 Template is considered a part of sub project.
 
+The infrastructure folder is like the backbone of the project. Each project is needed in order for the rest to be able to work. At the end of the day, each image used in the kube cluster has to be cached on Harbor.
+
 ### [W.I.P] KeyCloakOpe
 
 This part of the project has his own git branch folder and logic.
