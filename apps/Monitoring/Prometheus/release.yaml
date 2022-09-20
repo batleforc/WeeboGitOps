@@ -1,0 +1,47 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: prometheus
+  namespace: monitoring
+spec:
+  releaseName: prometheus
+  targetNamespace: monitoring
+  chart:
+    spec:
+      chart: kube-prometheus-stack
+      sourceRef:
+        kind: HelmRepository
+        name: prometheus
+        namespace: flux-system
+  values:
+    namespaceOverride: monitoring
+    prometheus-node-exporter:
+      hostRootFsMount:
+        enabled: false
+    grafana:
+      grafana.ini:
+        server:
+          root_url: https://grafana.weebo.fr
+        auth.generic_oauth:
+          enabled: true
+          client_id: grafana
+          icon: signin
+          client_secret: V03cfegESeegMv8ks6ANRoCTKVA1gbAc
+          scopes: openid profile email
+          name: MasterAuth
+          auth_url: http://auth.weebo.fr/realms/main/protocol/openid-connect/auth
+          token_url: http://auth.weebo.fr/realms/main/protocol/openid-connect/token
+          api_url: http://auth.weebo.fr/realms/main/protocol/openid-connect/userinfo
+          allow_sign_up: true
+          role_attribute_path: "contains(resource_access.grafana.roles[*], 'admin') && 'Admin' || contains(resource_access.grafana.roles[*], 'editor') && 'Editor' || 'Viewer'"
+      additionalDataSources:
+        - name: Loki
+          type: loki
+          access: proxy
+          url: http://loki.monitoring:3100
+          jsonData:
+            maxLines: 1000
+  interval: 24h
+  install:
+    remediation:
+      retries: 3
