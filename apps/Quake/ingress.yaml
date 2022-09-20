@@ -1,0 +1,33 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: quake
+  namespace: quake
+  annotations:
+    cert-manager.io/cluster-issuer: "local-issuer"
+    #nginx.ingress.kubernetes.io/auth-url: "https://$host/oauth2/auth"
+    #nginx.ingress.kubernetes.io/auth-signin: "https://$host/oauth2/start?rd=$escaped_request_uri"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - quake.niort.archi
+      secretName: quake-local-tls
+  rules:
+    - host: quake.niort.archi
+      http:
+        paths:
+          - pathType: ImplementationSpecific
+            backend:
+              service:
+                name: quake
+                port:
+                  number: 8080
+          # - path: /oauth2
+          #   pathType: Prefix
+          #   backend:
+          #     service:
+          #       name: oauth2-proxy
+          #       port:
+          #         number: 4180

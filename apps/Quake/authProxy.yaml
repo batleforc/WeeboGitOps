@@ -1,0 +1,28 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: quake-proxy
+  namespace: quake
+spec:
+  releaseName: quake-proxy
+  chart:
+    spec:
+      chart: oauth2-proxy
+      sourceRef:
+        kind: HelmRepository
+        name: oauth2-proxy
+        namespace: flux-system
+  values:
+    config:
+      clientID: "quake-proxy"
+      clientSecret: "quake-proxy"
+      cookieSecret: "K3FmQU5GR1daVUQyOG1zMnMvNTRTTU1WWGxnd0ZEOFk="
+    extraArgs:
+      provider: keycloak-oidc
+      redirect-url: "https://quake.niort.archi/oauth2/callback"
+      oidc-issuer-url: "https://auth.niort.archi/realms/main"
+      ssl-upstream-insecure-skip-verify: true
+  interval: 24h
+  install:
+    remediation:
+      retries: 3
