@@ -1,0 +1,52 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tekton-dashboard
+  namespace: tekton-pipelines
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/auth-url: "http://tekton-proxy-oauth2-proxy.tekton-pipelines.svc.cluster.local:80/oauth2/auth"
+    nginx.ingress.kubernetes.io/auth-signin: "https://cicd.weebo.fr/oauth2/start?rd=$escaped_request_uri"
+    nginx.ingress.kubernetes.io/proxy-buffer-size: 128k
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - cicd.weebo.fr
+      secretName: cicd-weebo-tls
+  rules:
+    - host: cicd.weebo.fr
+      http:
+        paths:
+          - pathType: ImplementationSpecific
+            backend:
+              service:
+                name: tekton-dashboard
+                port:
+                  number: 9097
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tekton-dashboard-proxy
+  namespace: tekton-pipelines
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-buffer-size: 128k
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - cicd.weebo.fr
+      secretName: cicd-weebo-tls
+  rules:
+    - host: cicd.weebo.fr
+      http:
+        paths:
+          - path: /oauth2
+            pathType: Prefix
+            backend:
+              service:
+                name: tekton-proxy-oauth2-proxy
+                port:
+                  number: 80
