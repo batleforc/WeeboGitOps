@@ -1,0 +1,37 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: harbor
+  namespace: harbor
+spec:
+  releaseName: harbor
+  chart:
+    spec:
+      chart: harbor
+      sourceRef:
+        kind: HelmRepository
+        name: harbor
+        namespace: flux-system
+  values:
+    externalURL: https://harbor.weebo.fr
+    expose:
+      tls:
+        secret:
+          secretName: harbor-weebo-tls
+          notarySecretName: notary-harbor-weebo-tls
+      ingress:
+        enabled: true
+        controller: nginx
+        className: nginx
+        annotations:
+          cert-manager.io/cluster-issuer: "letsencrypt-prod"
+        hosts:
+          core: harbor.weebo.fr
+          notary: notary.harbor.weebo.fr
+  interval: 24h
+  install:
+    timeout: 20m
+    remediation:
+      retries: 3
+  upgrade:
+    timeout: 20m
