@@ -1,0 +1,9 @@
+@startuml
+
+start
+:connect to k8s;
+:trigger reroll of deployment;
+:wait for new pod to be ready;
+stop
+
+@enduml

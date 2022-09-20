@@ -1,0 +1,10 @@
+@startuml
+
+start
+:clone repo;
+:checkout target commit;
+:build latex;
+:send pdf to artifact handler (S3);
+stop
+
+@enduml

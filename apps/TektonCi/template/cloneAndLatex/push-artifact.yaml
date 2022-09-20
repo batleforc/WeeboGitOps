@@ -1,0 +1,31 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: push-artifact
+  description: Build latex pdf
+spec:
+  params:
+    - name: host
+      type: string
+      description: The s3 host.
+    - name: access_key
+      type: string
+      description: The s3 access key.
+    - name: secret_key
+      type: string
+      description: The s3 secret key.
+    - name: bucket
+      type: string
+      description: The s3 bucket.
+    - name: namespace
+      type: string
+      description: The namespace folder.
+  workspaces:
+    - name: source
+      type: git
+  steps:
+    - name: read
+      image: leplusorg/latex:latest
+      script: |
+        mc alias set s3 $(params.host) $(params.access_key) $(params.secret_key)
+        mc cp $(workspaces.source.path)/build/ s3/$(params.bucket)/$(params.namespace)/ --recursive

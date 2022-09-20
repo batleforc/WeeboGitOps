@@ -1,0 +1,19 @@
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: build-latex
+  description: Build latex pdf
+spec:
+  params:
+    - name: latex-file
+      type: string
+      description: The latex file to build.
+      default: main.tex
+  workspaces:
+    - name: source
+  steps:
+    - name: build
+      image: leplusorg/latex:latest
+      script: |
+        mkdir $(workspaces.source.path)/build
+        latexml -outdir=$(workspaces.source.path)/build -pdf $(workspaces.source.path)/$(params.latex-file)

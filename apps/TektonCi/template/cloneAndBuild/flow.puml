@@ -1,0 +1,11 @@
+@startuml
+
+start
+:clone repo;
+:checkout target commit;
+:build dockerfile;
+:tag image;
+:push image to harbor;
+stop
+
+@enduml
