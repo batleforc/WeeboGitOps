@@ -1,0 +1,67 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: minio
+  namespace: minio
+spec:
+  releaseName: minio
+  chart:
+    spec:
+      chart: minio
+      sourceRef:
+        kind: HelmRepository
+        name: minio
+        namespace: flux-system
+  values:
+    rootUser: minioAdmin
+    rootPassword: minioAdmin
+    replicas: 1
+    persistence:
+      size: 20Gi
+    ingress:
+      enabled: true
+      annotations:
+        cert-manager.io/cluster-issuer: "letsencrypt-prod"
+      ingressClassName: "nginx"
+      hosts:
+        - minio.weebo.fr
+      tls:
+        - secretName: minio-weebo-tls
+          hosts:
+            - minio.weebo.fr
+    consoleIngress:
+      enabled: true
+      annotations:
+        cert-manager.io/cluster-issuer: "letsencrypt-prod"
+      ingressClassName: "nginx"
+      hosts:
+        - console.minio.weebo.fr
+      tls:
+        - secretName: minio-weebo-tls
+          hosts:
+            - console.minio.weebo.fr
+    oidc:
+      enabled: true
+      configUrl: https://auth.weebo.fr/realms/main/.well-known/openid-configuration
+      clientId: minio
+      clientSecret: minio
+      claimName: policy
+      scopes: "openid,profile,email,offline_access"
+      redirectUri: https://console.minio.weebo.fr/oauth_callback
+    buckets:
+      - name: latex
+        policy: public
+        purge: false
+        versioning: true
+    policies:
+      - name: admin
+        statements:
+          - resources:
+              - "arn:aws:s3:::*"
+            actions:
+              - "s3:*"
+              - "admin:*"
+  interval: 24h
+  install:
+    remediation:
+      retries: 3
