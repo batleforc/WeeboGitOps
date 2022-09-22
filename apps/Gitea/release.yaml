@@ -1,0 +1,70 @@
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
+kind: HelmRelease
+metadata:
+  name: gitea
+  namespace: gitea
+spec:
+  releaseName: gitea
+  chart:
+    spec:
+      chart: gitea
+      sourceRef:
+        kind: HelmRepository
+        name: gitea
+        namespace: flux-system
+  values:
+    gitea:
+      admin:
+        password: "giteaAdminPassword"
+        username: "giteaAdmin"
+        email: "giteadmin@weebo.fr"
+      metrics:
+        enabled: true
+      config:
+        APP_NAME: "Weebo Git Server"
+        ui:
+          DEFAULT_THEME: arc-green
+          meta:
+            AUTHOR: "Weebo Git Server"
+            DESCRIPTION: "Weebo Git Server"
+        server:
+          SSH_PORT: 2222
+      oauth:
+        - name: Weebo
+          provider: openidConnect
+          autoDiscoverUrl: https://auth.weebo.fr/realms/weebo/.well-known/openid-configuration
+          key: gitea
+          secret: "gitea"
+          groupClaimName: resource_access.gitea.roles
+          adminGroup: admin
+    postgresql:
+      enabled: true
+    persistence:
+      enabled: true
+      size: 20Gi
+      storageClass: "local-path"
+    ingress:
+      enabled: true
+      className: nginx
+      annotations:
+        cert-manager.io/cluster-issuer: local-issuer
+      hosts:
+        - host: git.weebo.fr
+          paths:
+            - path: /
+              pathType: Prefix
+      tls:
+        - hosts:
+            - git.weebo.fr
+          secretName: git-niort-tls
+    service:
+      ssh:
+        port: 2222
+        type: LoadBalancer
+  interval: 24h
+  install:
+    timeout: 10m
+    remediation:
+      retries: 3
+  upgrade:
+    timeout: 10m
