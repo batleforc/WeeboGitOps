@@ -6,7 +6,7 @@ metadata:
 data:
   db.weebo.fr: |
     $ttl 38400
-    weebo.fr.       IN      SOA     869b318675bf. maxleriche.60@gmail.com. (
+    weebo.fr.       IN      SOA     sdns2.ovh.net. maxleriche.60.gmail.com. (
                             1621093515
                             10800
                             3600

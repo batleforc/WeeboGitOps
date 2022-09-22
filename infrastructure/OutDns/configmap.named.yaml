@@ -7,7 +7,7 @@ data:
   named.conf: |
     options {
       directory "/var/cache/bind";
-      listen-on { 127.0.0.1; };
+      listen-on port 53 { any; };
       listen-on-v6 { ::1; };
       allow-recursion {
         none;

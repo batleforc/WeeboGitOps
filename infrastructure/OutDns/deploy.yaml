@@ -29,26 +29,24 @@ spec:
             - name: loopback
               containerPort: 953
           volumeMounts:
-            - name: named-conf
+            - name: named-map
               mountPath: /etc/bind
-              subPath: named.conf
-            - name: zone-conf
+            - name: zone-map
               mountPath: /var/lib/bind/
-              subPath: db.weebo.fr
           readinessProbe:
-            httpGet:
-              path: /
-              port: 8080
+            tcpSocket:
+              port: dns-tcp
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: dns-udp
+            initialDelaySeconds: 5
+            periodSeconds: 10
       volumes:
         - name: zone-map
           configMap:
             name: zone-map
-            items:
-              - key: db.weebo.fr
-                path: db.weebo.fr
         - name: named-map
           configMap:
             name: named-map
-            items:
-              - key: named.conf
-                path: named.conf
