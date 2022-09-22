@@ -14,8 +14,8 @@ data:
                             38400 )
     weebo.fr. 3600      CAA       0 issue "letsencrypt.org"
     weebo.fr. 600 IN TXT "v=spf1 mx a:mail.weebo.fr ~all"
-    weebo.fr        3600    A                               51.91.30.17
-    weebo.fr        3600    AAAA                            2001:41d0:403:2b11::
+    weebo.fr.       3600    A                               51.91.30.17
+    weebo.fr.       3600    AAAA                            2001:41d0:403:2b11::
     weebo.fr.       NS                                      sdns2.ovh.net.
     weebo.fr.       NS                                      dns103.ovh.net.
     weebo.fr.       NS                                      ns103.ovh.net.
