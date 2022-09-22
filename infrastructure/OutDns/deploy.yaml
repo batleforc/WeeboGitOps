@@ -20,10 +20,10 @@ spec:
         - name: dns-server
           image: internetsystemsconsortium/bind9:9.19
           ports:
-            - name: dnsTCP
+            - name: dns-tcp
               containerPort: 53
               protocol: TCP
-            - name: dnsUDP
+            - name: dns-udp
               containerPort: 53
               protocol: UDP
             - name: loopback
