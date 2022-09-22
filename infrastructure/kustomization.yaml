@@ -4,6 +4,7 @@ resources:
   - HelmSource
   - Nginx
   - CertManager
+  - OutDns
   - Harbor
   - Keycloak
   - Tekton

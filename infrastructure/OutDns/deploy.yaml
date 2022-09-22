@@ -1,0 +1,54 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dns-server
+  namespace: outdns
+  labels:
+    app: dns-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dns-server
+  template:
+    metadata:
+      labels:
+        app: dns-server
+    spec:
+      containers:
+        - name: dns-server
+          image: internetsystemsconsortium/bind9:9.19
+          ports:
+            - name: dnsTCP
+              containerPort: 53
+              protocol: TCP
+            - name: dnsUDP
+              containerPort: 53
+              protocol: UDP
+            - name: loopback
+              containerPort: 953
+          volumeMounts:
+            - name: named-conf
+              mountPath: /etc/bind
+              subPath: named.conf
+            - name: zone-conf
+              mountPath: /var/lib/bind/
+              subPath: db.weebo.fr
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8080
+      volumes:
+        - name: zone-map
+          configMap:
+            name: zone-map
+            items:
+              - key: db.weebo.fr
+                path: db.weebo.fr
+        - name: named-map
+          configMap:
+            name: named-map
+            items:
+              - key: named.conf
+                path: named.conf

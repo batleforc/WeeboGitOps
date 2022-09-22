@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: zone-map
+  namespace: outdns
+data:
+  db.weebo.fr: |
+    $ttl 38400
+    weebo.fr.       IN      SOA     869b318675bf. maxleriche.60@gmail.com. (
+                            1621093515
+                            10800
+                            3600
+                            604800
+                            38400 )
+    weebo.fr. 3600          A         51.91.30.17
+    weebo.fr. 3600      CAA       0 issue "letsencrypt.org"
+    weebo.fr. 600 IN TXT "v=spf1 mx a:mail.weebo.fr ~all"
+    weebo.fr        3600    A                               51.91.30.17
+    weebo.fr        3600    AAAA                            2001:41d0:403:2b11::
+    weebo.fr.       NS                                      sdns2.ovh.net.
+    weebo.fr.       NS                                      dns103.ovh.net.
+    weebo.fr.       NS                                      ns103.ovh.net.
+    auth            3600    A                               51.91.30.17
+    grafana         3600    A                               51.91.30.17
+    harbor          3600    A                               51.91.30.17
+    notary.harbor   3600    A                               51.91.30.17
+    qube            3600    A                               51.91.30.17
+    bucket          3600    A                               51.91.30.17
+    console.bucket  3600    A                               51.91.30.17
+    cicd            3600    A                               51.91.30.17

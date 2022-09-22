@@ -24,22 +24,22 @@ spec:
         cert-manager.io/cluster-issuer: "letsencrypt-prod"
       ingressClassName: "nginx"
       hosts:
-        - minio.weebo.fr
+        - bucket.weebo.fr
       tls:
-        - secretName: minio-weebo-tls
+        - secretName: bucket-weebo-tls
           hosts:
-            - minio.weebo.fr
+            - bucket.weebo.fr
     consoleIngress:
       enabled: true
       annotations:
         cert-manager.io/cluster-issuer: "letsencrypt-prod"
       ingressClassName: "nginx"
       hosts:
-        - console.minio.weebo.fr
+        - console.bucket.weebo.fr
       tls:
-        - secretName: minio-weebo-tls
+        - secretName: bucket-weebo-tls
           hosts:
-            - console.minio.weebo.fr
+            - console.bucket.weebo.fr
     oidc:
       enabled: true
       configUrl: https://auth.weebo.fr/realms/main/.well-known/openid-configuration
@@ -47,7 +47,7 @@ spec:
       clientSecret: minio
       claimName: policy
       scopes: "openid,profile,email,offline_access"
-      redirectUri: https://console.minio.weebo.fr/oauth_callback
+      redirectUri: https://console.bucket.weebo.fr/oauth_callback
     buckets:
       - name: latex
         policy: public
