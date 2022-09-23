@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: kavita
+  namespace: reader
+spec:
+  ports:
+    - name: kavita
+      port: 5000
+      targetPort: 5000
+  selector:
+    app: kavita
+  type: ClusterIP
