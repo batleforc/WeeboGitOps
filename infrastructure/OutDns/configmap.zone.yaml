@@ -12,8 +12,8 @@ data:
                             3600
                             604800
                             38400 )
-    weebo.fr. 3600      CAA       0 issue "letsencrypt.org"
-    weebo.fr. 600 IN TXT "v=spf1 mx a:mail.weebo.fr ~all"
+    weebo.fr.       3600    CAA       0 issue "letsencrypt.org"
+    weebo.fr.       600     IN TXT "v=spf1 mx a:mail.weebo.fr ~all"
     weebo.fr.       3600    A                               51.91.30.17
     weebo.fr.       3600    AAAA                            2001:41d0:403:2b11::
     weebo.fr.       NS                                      sdns2.ovh.net.
@@ -27,3 +27,6 @@ data:
     bucket          3600    A                               51.91.30.17
     console.bucket  3600    A                               51.91.30.17
     cicd            3600    A                               51.91.30.17
+    board           3600    A                               51.91.30.17
+    quake           3600    A                               51.91.30.17
+    git             3600    A                               51.91.30.17
