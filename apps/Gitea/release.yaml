@@ -27,8 +27,6 @@ spec:
           meta:
             AUTHOR: "Weebo Git Server"
             DESCRIPTION: "Weebo Git Server"
-        server:
-          SSH_PORT: 2222
       oauth:
         - name: Weebo
           provider: openidConnect
@@ -57,10 +55,6 @@ spec:
         - hosts:
             - git.weebo.fr
           secretName: git-niort-tls
-    service:
-      ssh:
-        port: 2222
-        type: LoadBalancer
   interval: 24h
   install:
     timeout: 10m
