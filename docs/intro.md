@@ -16,10 +16,10 @@ In addition to that handling my own cluster with GitOps can make my life easier.
 
 So, in our case we need to deploy some application like the basical need of a young DevOps like me:
 
-- CI/CD engine (Concouse at first but migrating to Tekton)
-- Monitoring system, log monitoring and uptime monitoring (Prometheus + Grafana + Loki + UptimeKuma)
-- Identity management system (KeyCloak)
-- Dashboard (because it looks cool)
+- CI/CD engine (Tekton, in the past Concourse)
+- Monitoring system, log monitoring and uptime monitoring (Prometheus + Grafana + Loki + Tempo)
+- Identity management system (Zitadel, in the past KeyCloak)
+- Dashboard (Dashy that look's cool)
 - GitRepository (Gitea)
 - Container image registry (GoHarbor)
 - Code Quality (SonarQube)
@@ -27,37 +27,27 @@ So, in our case we need to deploy some application like the basical need of a yo
 
 At first i was expecting a world where all i want already exist. But this is not the case. So in order to simplify a lot's of stuff FluxCI that i discovered during the 2022 CNCF & Kubecon has been used has the GitOps engine.
 
-```plantuml context
-node Github{
-  node OtherApplicationLikeWereWolf{
-    node main as werewolfMain{
-      folder deploy
-      folder OtherSourceCode
-    }
-  }
-  node WeeboGitOps{
-    node main
-    node SubProject{
-      node "Doc/Main" as docMain
-      node "KeyCloakOpe/Main" as keyMain
-      node "OtherProject/Main" as otherMain
-    }
-  }
-}
+```mermaid
+graph TB;
+  subgraph ClusterKubernetes
+    FluxCI
+  end
+  subgraph Github
+    subgraph WeeboGitOps
+      ProdWeebo3
+      subgraph Doc
+        docmain["Doc/Main"]
+        docrelease["Doc/Release"]
+      end
+    end
+    subgraph PortfolioOrOther
+      mainPortfolio["Portfolio/Main"]
+    end
+  end
 
-node ClusterKubernetes{
-  node FluxCI
-}
+  FluxCI -->|AutoDeploy| ProdWeebo3
+  FluxCI -->|AutoDeploy| mainPortfolio
 
-deploy <--> FluxCI : "Another app watched in order to deploy it"
-main <=> FluxCI : "Cluster definition"
-SubProject <=> FluxCI : "Project used with job to deploy certain applications"
 ```
 
 Inside the WeeboGitOps github repository we can find the GitOps definition of the cluster.
-
-And in order to create what i was missing (like a working operator for KeyCloak) this project was completed with a SubProject MonoRepo workflow.
-
-:::tip
-This whole Github repository contains component that follow a SubProject monorepo workflow. if you want to learn more go to [SubProject definition](./SubProject)
-:::

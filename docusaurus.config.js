@@ -1,34 +1,29 @@
 // @ts-check
 // Note: type annotations allow type checking and IDEs autocompletion
-if (process.env.REACT_APP_ENV !== "prod") require("dotenv-flow").config();
+
 const lightCodeTheme = require("prism-react-renderer/themes/github");
 const darkCodeTheme = require("prism-react-renderer/themes/dracula");
-const simplePlantUml = require("@akebifiky/remark-simple-plantuml");
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: "WeeboGitOps",
   tagline: "WeeboGitOps is a POC to learn GitOps",
+  favicon: "img/favicon.ico",
   url: "https://batleforc.weebo.fr",
   baseUrl: "/WeeboGitOps/",
+  organizationName: "batleforc",
+  projectName: "WeeboGitOps",
   onBrokenLinks: "throw",
   onBrokenMarkdownLinks: "warn",
-  favicon: "img/favicon.ico",
   trailingSlash: false,
-
-  // GitHub pages deployment config.
-  // If you aren't using GitHub pages, you don't need these.
-  organizationName: "batleforc", // Usually your GitHub org/user name.
-  projectName: "WeeboGitOps", // Usually your repo name.
-
-  // Even if you don't use internalization, you can use this field to set useful
-  // metadata like html lang. For example, if your site is Chinese, you may want
-  // to replace "en" with "zh-Hans".
   i18n: {
-    defaultLocale: "en",
-    locales: ["en"],
+    defaultLocale: "fr",
+    locales: ["fr"],
   },
-
+  markdown: {
+    mermaid: true,
+  },
+  themes: ["@docusaurus/theme-mermaid"],
   presets: [
     [
       "classic",
@@ -36,17 +31,12 @@ const config = {
       ({
         docs: {
           sidebarPath: require.resolve("./sidebars.js"),
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
           editUrl: "https://github.com/batleforc/WeeboGitOps/tree/Doc/Main",
-          remarkPlugins: [simplePlantUml],
         },
         blog: {
           showReadingTime: true,
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
+
           editUrl: "https://github.com/batleforc/WeeboGitOps/tree/Doc/Main",
-          remarkPlugins: [simplePlantUml],
         },
         theme: {
           customCss: require.resolve("./src/css/custom.css"),
@@ -58,20 +48,22 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
+      // Replace with your project's social card
       colorMode: {
         defaultMode: "dark",
         disableSwitch: false,
       },
+      image: "img/docusaurus-social-card.jpg",
       navbar: {
         title: "WeebpGitOps",
         logo: {
-          alt: "My Site Logo",
+          alt: "WeeboGitOps Logo",
           src: "img/logo.svg",
         },
         items: [
           {
-            type: "doc",
-            docId: "intro",
+            type: "docSidebar",
+            sidebarId: "intro",
             position: "left",
             label: "Doc",
           },
@@ -109,7 +101,7 @@ const config = {
             ],
           },
         ],
-        copyright: `Copyright © ${new Date().getFullYear()} WeeboGitOps by Batleforc. Built with Docusaurus.`,
+        copyright: `Copyright © ${new Date().getFullYear()} WeeboGitOps by Batleforc. Built with Docusaurus and lot's of coffee.`,
       },
       prism: {
         theme: lightCodeTheme,
