@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkgit_ops_doc=self.webpackChunkgit_ops_doc||[]).push([[535],{5641:e=>{e.exports=JSON.parse('{"title":"Recent posts","items":[{"title":"One year later","permalink":"/WeeboGitOps/blog/one-year-later"},{"title":"Init Doc","permalink":"/WeeboGitOps/blog/init-doc"}]}')}}]);
