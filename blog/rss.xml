@@ -4,10 +4,23 @@
         <title>WeeboGitOps Blog</title>
         <link>https://batleforc.weebo.fr/WeeboGitOps/blog</link>
         <description>WeeboGitOps Blog</description>
-        <lastBuildDate>Sat, 19 Aug 2023 00:00:00 GMT</lastBuildDate>
+        <lastBuildDate>Sun, 20 Aug 2023 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <language>fr</language>
+        <item>
+            <title><![CDATA[Auto Auth]]></title>
+            <link>https://batleforc.weebo.fr/WeeboGitOps/blog/Auth</link>
+            <guid>https://batleforc.weebo.fr/WeeboGitOps/blog/Auth</guid>
+            <pubDate>Sun, 20 Aug 2023 00:00:00 GMT</pubDate>
+            <description><![CDATA[What's new]]></description>
+            <content:encoded><![CDATA[<h2 class="anchor anchorWithStickyNavbar_LWe7" id="whats-new">What's new<a href="#whats-new" class="hash-link" aria-label="Lien direct vers What's new" title="Lien direct vers What's new">​</a></h2><p>During the night i finnaly found a way to automate Sonarqube with the help of... Oauth2Proxy and Terraform !!!!</p><h2 class="anchor anchorWithStickyNavbar_LWe7" id="automate-me">Automate me<a href="#automate-me" class="hash-link" aria-label="Lien direct vers Automate me" title="Lien direct vers Automate me">​</a></h2><p>So it's the turn of Sonarqube to be automated with... terraform again. I love this tool ! So what does the automation and upgrade does ?</p><ul><li>Separate Sonarqube from it's database with two helm release</li><li>Setup Oauth2Proxy to handle the authentication of Sonarqube and ignore path that doesn't need authentication</li><li>Setup the ingress to handle the authentication and the path to Sonarqube/Oauth2Proxy</li><li>Automate the configuration of Sonarqube with TF</li><li>Automate the creation of Sonarqube secret with TF</li><li>RollBack to the previous version of Sonarqube from 10 to 9.9</li></ul><h3 class="anchor anchorWithStickyNavbar_LWe7" id="upgrade">Upgrade<a href="#upgrade" class="hash-link" aria-label="Lien direct vers Upgrade" title="Lien direct vers Upgrade">​</a></h3><p>In order to facilitate my upgrade process, i setup <a href="https://www.mend.io/renovate/" target="_blank" rel="noopener noreferrer">Renovate</a> to handle the upgrade of my dependencies. It's really easy to use and it's working really well. I just need to execute the renovate job daily and it create PR when needed and merge it when i think it's ok.</p><p>Well we need everything to be up to date, so i upgraded everything to the latest version available like</p><ul><li>No Upgrade this time</li></ul><p>While working on the upgrade part, i ended up thinking that setting up Changelog would be a good thing. So i'm thinking of including <a href="https://docs.cocogitto.io/" target="_blank" rel="noopener noreferrer">cog</a>.</p><h3 class="anchor anchorWithStickyNavbar_LWe7" id="next-to-do">Next to do<a href="#next-to-do" class="hash-link" aria-label="Lien direct vers Next to do" title="Lien direct vers Next to do">​</a></h3><ul class="contains-task-list containsTaskList_mC6p"><li class="task-list-item"><input type="checkbox" disabled=""> <!-- -->Setup Changelog</li></ul><p>While i was upgrading everything it become obvious that i need to upgrade my use of Github. Then i moved from the old Github Dashboard to <a href="https://github.com/users/batleforc/projects/7/views/1" target="_blank" rel="noopener noreferrer">the new one</a>. Event if i wasn't writing the doc, i was still working on the project and updating the dashboard and issues.</p>]]></content:encoded>
+            <category>Zitadel</category>
+            <category>terraform</category>
+            <category>flux</category>
+            <category>gitops</category>
+            <category>daily</category>
+        </item>
         <item>
             <title><![CDATA[Renovate And Co]]></title>
             <link>https://batleforc.weebo.fr/WeeboGitOps/blog/Renovate-co</link>
