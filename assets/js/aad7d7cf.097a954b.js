@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkgit_ops_doc=self.webpackChunkgit_ops_doc||[]).push([[776],{7262:e=>{e.exports=JSON.parse('{"label":"Layering","permalink":"/WeeboGitOps/blog/tags/layering","allTagsPath":"/WeeboGitOps/blog/tags","count":1}')}}]);

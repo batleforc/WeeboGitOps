@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkgit_ops_doc=self.webpackChunkgit_ops_doc||[]).push([[6311],{1321:s=>{s.exports=JSON.parse('{"label":"CNI","permalink":"/WeeboGitOps/blog/tags/cni","allTagsPath":"/WeeboGitOps/blog/tags","count":1}')}}]);

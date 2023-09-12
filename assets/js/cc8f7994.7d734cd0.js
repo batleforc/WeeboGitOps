@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkgit_ops_doc=self.webpackChunkgit_ops_doc||[]).push([[3101],{2024:s=>{s.exports=JSON.parse('{"label":"CSI","permalink":"/WeeboGitOps/blog/tags/csi","allTagsPath":"/WeeboGitOps/blog/tags","count":1}')}}]);

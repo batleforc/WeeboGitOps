@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkgit_ops_doc=self.webpackChunkgit_ops_doc||[]).push([[2811],{4779:e=>{e.exports=JSON.parse('{"permalink":"/WeeboGitOps/blog/tags/daily","page":1,"postsPerPage":10,"totalPages":1,"totalCount":3,"blogDescription":"Blog","blogTitle":"Blog"}')}}]);
