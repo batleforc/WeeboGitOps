@@ -23,6 +23,9 @@ flowchart TB;
     subgraph Tracing
       Tempo
     end
+    subgraph NetworkObservability
+      Hubble
+    end
   end
 
   Grafana ===>|Query PromQL| Prometheus
@@ -30,6 +33,7 @@ flowchart TB;
   Grafana ===>|Query TraceQL| Tempo
   Promtail -->|Send logs from container| Loki
   AlertManager -->|Querry then trigger alerts| Prometheus
+  Prometheus -->|Collect metrics| Hubble
 ```
 
 ## Grafana
@@ -69,6 +73,10 @@ With the help of grafana and TraceQL, we can for exemple querry every traces col
 ![Tempo Querry](/img/explore-tempo.png)
 
 At the moment not much traces are collected, but it's a good start.
+
+## Hubble
+
+Hubble is a part of the Cilium project. It's a service that allow the observability of Network, Service and security for kubernetes. It allow lots of knowledges about the network and the services running in the cluster.
 
 ## AlertManager
 
